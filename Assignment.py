@@ -1,10 +1,10 @@
 from tkinter import *
 
-class Restaurant_Ordering_System:
+class Recipe_Organizer_System:
     def __init__(self):
         # Create the main window and set its title
         window = Tk()
-        window.title("3A3D Restaurant")
+        window.title("3A3D Recipe Organizer")
 
         self.canvas = Canvas(window, width=400, height=300, bg="lightblue")
         self.canvas.pack()
@@ -12,10 +12,10 @@ class Restaurant_Ordering_System:
         # Create a frame to hold the widgets
         frame = Frame(window)
         frame.pack()
-        self.label = Label(frame, text="Welcome to the 3A3D Restaurant")
+        self.label = Label(frame, text="Welcome to the 3A3D Recipe Organizer")
         self.label.pack()
 
-        self.order_button = Button(frame, text="Place Order", command=self.place_order)
+        self.order_button = Button(frame, text="Create Recipe", command=self.create_recipe)
         self.order_button.pack()
 
         self.exit_button = Button(frame, text="Exit", command=window.quit)
@@ -23,27 +23,27 @@ class Restaurant_Ordering_System:
 
         window.mainloop()
 
-    # Create a method to handle placing an order
-    def place_order(self):
-        self.order_window = Toplevel()
-        self.order_window.title("Place Order")
+    def create_recipe(self):
+        # Create a new window for recipe creation
+        recipe_window = Toplevel()
+        recipe_window.title("Create Recipe")
 
-        self.menu_label = Label(self.order_window, text="Menu")
-        self.menu_label.pack()
+        # Create labels and entry fields for recipe details
+        Label(recipe_window, text="Recipe Name:").grid(row=0, column=0)
+        self.recipe_name_entry = Entry(recipe_window)
+        self.recipe_name_entry.grid(row=0, column=1)
 
-        self.menu_items = ["Pizza", "Burger", "Pasta", "Salad"]
-        self.menu_var = StringVar(value=self.menu_items)
+        Label(recipe_window, text="Ingredients:").grid(row=1, column=0)
+        self.ingredients_entry = Entry(recipe_window)
+        self.ingredients_entry.grid(row=1, column=1)
 
-        self.menu_listbox = Listbox(self.order_window, listvariable=self.menu_var, selectmode=SINGLE)
-        self.menu_listbox.pack()
+        Label(recipe_window, text="Instructions:").grid(row=2, column=0)
+        self.instructions_entry = Entry(recipe_window)
+        self.instructions_entry.grid(row=2, column=1)
 
-        self.quantity_label = Label(self.order_window, text="Quantity")
-        self.quantity_label.pack()
+        # Create a button to save the recipe
+        save_button = Button(recipe_window, text="Save Recipe", command=self.save_recipe)
+        save_button.grid(row=3, columnspan=2)
 
-        self.quantity_entry = Entry(self.order_window)
-        self.quantity_entry.pack()
+Recipe_Organizer_System()
 
-        self.submit_button = Button(self.order_window, text="Submit Order", command=self.submit_order)
-        self.submit_button.pack()
-
-Restaurant_Ordering_System()
