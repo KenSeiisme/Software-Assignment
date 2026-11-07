@@ -45,5 +45,16 @@ class Recipe_Organizer_System:
         save_button = Button(recipe_window, text="Save Recipe", command=self.save_recipe)
         save_button.grid(row=3, columnspan=2)
 
+    def save_recipe(self):
+        # Get the recipe details from the entry fields
+        recipe_name = self.recipe_name_entry.get()
+        ingredients = self.ingredients_entry.get()
+        instructions = self.instructions_entry.get()
+
+        # Here you can add code to save the recipe details to a file or database
+        print(f"Recipe Name: {recipe_name}")
+        print(f"Ingredients: {ingredients}")
+        print(f"Instructions: {instructions}")
+
 Recipe_Organizer_System()
 
