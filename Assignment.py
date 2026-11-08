@@ -9,6 +9,14 @@ class Recipe_Organizer_System:
         self.canvas = Canvas(window, width=400, height=300, bg="lightblue")
         self.canvas.pack()
 
+        menubar = Menu(window)
+        window.config(menu = menubar)
+
+        operaion_menu = Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Operations", menu=operaion_menu)
+        operaion_menu.add_command(label="Create Recipe", command=self.create_recipe)
+        operaion_menu.add_command(label="Exit", command=window.quit)
+
         # Create a frame to hold the widgets
         frame = Frame(window)
         frame.pack()
