@@ -15,6 +15,8 @@ class Recipe_Organizer_System:
         operaion_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Operations", menu=operaion_menu)
         operaion_menu.add_command(label="Create Recipe", command=self.create_recipe)
+        operaion_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
+        operaion_menu.add_command(label="Search Recipe", command=self.search_recipe)
         operaion_menu.add_command(label="Exit", command=window.quit)
 
         # Create a frame to hold the widgets
@@ -25,6 +27,12 @@ class Recipe_Organizer_System:
 
         self.order_button = Button(frame, text="Create Recipe", command=self.create_recipe)
         self.order_button.pack()
+
+        self.edit_button = Button(frame, text="Edit Recipe", command=self.edit_recipe)
+        self.edit_button.pack()
+
+        self.search_button = Button(frame, text="Search Recipe", command=self.search_recipe)
+        self.search_button.pack()
 
         self.exit_button = Button(frame, text="Exit", command=window.quit)
         self.exit_button.pack()
@@ -63,6 +71,42 @@ class Recipe_Organizer_System:
         print(f"Recipe Name: {recipe_name}")
         print(f"Ingredients: {ingredients}")
         print(f"Instructions: {instructions}")
+
+    def edit_recipe(self):
+        # Create a new window for recipe editing
+        edit_window = Toplevel()
+        edit_window.title("Edit Recipe")
+
+        # Create labels and entry fields for recipe details
+        Label(edit_window, text="Recipe Name:").grid(row=0, column=0)
+        self.edit_recipe_name_entry = Entry(edit_window)
+        self.edit_recipe_name_entry.grid(row=0, column=1)
+
+        Label(edit_window, text="Ingredients:").grid(row=1, column=0)
+        self.edit_ingredients_entry = Entry(edit_window)
+        self.edit_ingredients_entry.grid(row=1, column=1)
+
+        Label(edit_window, text="Instructions:").grid(row=2, column=0)
+        self.edit_instructions_entry = Entry(edit_window)
+        self.edit_instructions_entry.grid(row=2, column=1)
+
+        # Create a button to save the edited recipe
+        save_button = Button(edit_window, text="Save Changes", command=self.save_edited_recipe)
+        save_button.grid(row=3, columnspan=2)
+
+    def search_recipe(self):
+        # Create a new window for recipe searching
+        search_window = Toplevel()
+        search_window.title("Search Recipe")
+
+        # Create a label and entry field for recipe name
+        Label(search_window, text="Recipe Name:").grid(row=0, column=0)
+        self.search_recipe_name_entry = Entry(search_window)
+        self.search_recipe_name_entry.grid(row=0, column=1)
+
+        # Create a button to search for the recipe
+        search_button = Button(search_window, text="Search", command=self.perform_search)
+        search_button.grid(row=1, columnspan=2)
 
 Recipe_Organizer_System()
 
