@@ -14,12 +14,12 @@ class Recipe_Organizer_System:
         menubar = Menu(window)
         window.config(menu = menubar)
 
-        operaion_menu = Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Operations", menu=operaion_menu)
-        operaion_menu.add_command(label="Create Recipe", command=self.create_recipe)
-        operaion_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
-        operaion_menu.add_command(label="Search Recipe", command=self.search_recipe)
-        operaion_menu.add_command(label="Exit", command=window.quit)
+        operation_menu = Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Operations", menu=operation_menu)
+        operation_menu.add_command(label="Create Recipe", command=self.create_recipe)
+        operation_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
+        operation_menu.add_command(label="Search Recipe", command=self.search_recipe)
+        operation_menu.add_command(label="Exit", command=window.quit)
 
         # Create a frame to hold the widgets
         frame = Frame(window)
