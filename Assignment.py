@@ -6,7 +6,7 @@ class Recipe_Organizer_System:
         window = Tk()
         window.title("3A3D Recipe Organizer")
 
-        logo_Image = PhotoImage(file = "3A-3D.png")
+        logo_Image = PhotoImage(file = "kiyo.png")
         self.canvas = Canvas(window, width=400, height=300, bg="white")
         self.canvas.pack()
         self.canvas.create_image(0, 0, anchor=NW, image=logo_Image)
