@@ -2,6 +2,7 @@
 recipes = [
     {
         "name": "Pan-Seared Butter Steak",
+        "image": "images.py/beef.png",
         "category": "Western",
         "tags": ["main course"],
         "ingredients": [
@@ -23,6 +24,7 @@ recipes = [
     },
     {
         "name": "Creamy Mushroom Soup",
+        "image": "images.py/soap.png",
         "category": "Western",
         "tags": ["soup"],
         "ingredients": [
@@ -47,6 +49,7 @@ recipes = [
     },
     {
         "name": "Teriyaki Chicken Don",
+        "image": "images.py/teri.png",
         "category": "Japanese",
         "tags": ["main course", "rice bowl"],
         "ingredients": [
@@ -68,6 +71,7 @@ recipes = [
     },
     {
         "name": "Gyudon",
+        "image": "images.py/gyudon.png",
         "category": "Japanese",
         "tags": ["main course", "rice bowl"],
         "ingredients": [
@@ -88,6 +92,7 @@ recipes = [
     },
     {
         "name": "Kimchi Jjigae",
+        "image": "images.py/kimchi.png",
         "category": "Korean",
         "tags": ["soup", "spicy"],
         "ingredients": [
@@ -112,6 +117,7 @@ recipes = [
     },
     {
         "name": "Tteokbokki",
+        "image": "images.py/tt.png",
         "category": "Korean",
         "tags": ["snack", "spicy"],
         "ingredients": [
@@ -135,6 +141,7 @@ recipes = [
     },
     {
         "name": "Tomato Scrambled Eggs",
+        "image": "images.py/egg.png",
         "category": "Chinese",
         "tags": ["home-style", "quick"],
         "ingredients": [
@@ -155,6 +162,7 @@ recipes = [
     },
     {
         "name": "Coca-Cola Chicken Wings",
+        "image": "images.py/coke.png",
         "category": "Chinese",
         "tags": ["home-style"],
         "ingredients": [
@@ -178,6 +186,7 @@ recipes = [
     },
     {
         "name": "Butter Chicken",
+        "image": "images.py/butter.png",
         "category": "Indian",
         "tags": ["main course", "curry"],
         "ingredients": [
@@ -204,6 +213,7 @@ recipes = [
     },
     {
         "name": "Aloo Jeera",
+        "image": "images.py/alo.png",
         "category": "Indian",
         "tags": ["side dish", "vegetarian"],
         "ingredients": [
@@ -225,6 +235,7 @@ recipes = [
     },
     {
         "name": "Nasi Lemak",
+        "image": "images.py/nasi.png",
         "category": "Malay",
         "tags": ["main course", "rice"],
         "ingredients": [
@@ -249,6 +260,7 @@ recipes = [
     },
     {
         "name": "Ayam Goreng Berempah",
+        "image": "images.py/ayam.png",
         "category": "Malay",
         "tags": ["main course", "fried"],
         "ingredients": [
@@ -273,6 +285,7 @@ recipes = [
     },
     {
         "name": "Spaghetti Aglio e Olio",
+        "image": "images.py/spa.png",
         "category": "Italian",
         "tags": ["main course", "pasta", "vegetarian"],
         "ingredients": [
@@ -293,6 +306,7 @@ recipes = [
     },
     {
         "name": "Skillet Margherita Pizza",
+        "image": "images.py/pizza.png",
         "category": "Italian",
         "tags": ["main course", "quick"],
         "ingredients": [
@@ -310,6 +324,7 @@ recipes = [
     },
     {
         "name": "Mango Sago",
+        "image": "images.py/mango.png",
         "category": "Dessert",
         "tags": ["sweet soup", "chilled"],
         "ingredients": [
@@ -331,6 +346,7 @@ recipes = [
     },
     {
         "name": "Crème Caramel",
+        "image": "images.py/pud.png",
         "category": "Dessert",
         "tags": ["baking", "custard"],
         "ingredients": [
@@ -353,6 +369,7 @@ recipes = [
     },
     {
         "name": "Thai Iced Tea",
+        "image": "images.py/Thai.png",
         "category": "Beverage",
         "tags": ["tea", "iced"],
         "ingredients": [
@@ -372,6 +389,7 @@ recipes = [
     },
     {
         "name": "Virgin Mojito",
+        "image": "images.py/mojito.png",
         "category": "Beverage",
         "tags": ["mocktail", "sparkling"],
         "ingredients": [
