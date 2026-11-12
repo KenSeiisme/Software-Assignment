@@ -3,8 +3,11 @@ from tkinter import messagebox
 
 class Recipe_Organizer_System:
     def __init__(self):
-        # Create the main window and set its title
+        # Create the main window
         self.window = Tk()
+        # Set the window size
+        self.window.geometry("400x500")
+
         # username and password
         self.users = {
         "user01": "Kiyo2026",
@@ -39,7 +42,8 @@ class Recipe_Organizer_System:
             widget.destroy()
 
         self.window.title("Registration Center")
-        self.window.geometry("400x300")
+        self.window.geometry("400x500")
+
 
         Label(self.window, text="Welcome!",font=("Times New Roman", 20, "bold", "italic")).pack(pady=20)
         Label(self.window, text="Username").pack()
@@ -66,7 +70,8 @@ class Recipe_Organizer_System:
             widget.destroy()
 
         self.window.title("Login Center")
-        self.window.geometry("400x300")
+        self.window.geometry("400x500")
+
 
         Label(self.window, text="Welcome back!", font=("Times New Roman", 20, "bold", "italic")).pack(pady=10)
         Label(self.window, text="Username").pack()
@@ -92,7 +97,7 @@ class Recipe_Organizer_System:
     def homePage(self):
         
         for widget in self.window.winfo_children():
-                    widget.destroy()
+            widget.destroy()
 
         self.window.title("Home")
         title = Label(self.window, text="Kiyo Recipe Organizer", font=("CourierNew", 20, "bold", "italic"))
@@ -133,12 +138,13 @@ class Recipe_Organizer_System:
     def Recipe_Page(self):
 
         for widget in self.window.winfo_children():
-                    widget.destroy()
+            widget.destroy()
 
         self.window.title("Kiyo Recipe Organizer")
         Label(self.window, text="Kiyo Recipe", font=("Times New Roman", 20, "bold", "italic")).pack(pady=10)
         ### not complete yet
         menubar = Menu(self.window)
+        self.window.config(menu=menubar)
 
         operation_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Operations", menu=operation_menu)
@@ -148,21 +154,21 @@ class Recipe_Organizer_System:
         operation_menu.add_command(label="Exit", command=self.window.quit)
         
         # Create a frame to hold the widgets
-        frame = Frame(self.window)
-        frame.pack()
-        self.label = Label(frame, text="Welcome to the 3A3D Recipe Organizer")
+        self.recipe_frame = Frame(self.window)
+        self.recipe_frame.pack()
+        self.label = Label(self.recipe_frame, text="Welcome to the 3A3D Recipe Organizer")
         self.label.pack()
         
-        self.order_button = Button(frame, text="Create Recipe", command=self.create_recipe)
+        self.order_button = Button(self.recipe_frame, text="Create Recipe", command=self.create_recipe)
         self.order_button.pack()
         
-        self.edit_button = Button(frame, text="Edit Recipe", command=self.edit_recipe)
+        self.edit_button = Button(self.recipe_frame, text="Edit Recipe", command=self.edit_recipe)
         self.edit_button.pack()
         
-        self.search_button = Button(frame, text="Search Recipe", command=self.search_recipe)
+        self.search_button = Button(self.recipe_frame, text="Search Recipe", command=self.search_recipe)
         self.search_button.pack()
         
-        self.exit_button = Button(frame, text="Exit", command=self.window.quit)
+        self.exit_button = Button(self.recipe_frame, text="Exit", command=self.window.quit)
         self.exit_button.pack()
         
         

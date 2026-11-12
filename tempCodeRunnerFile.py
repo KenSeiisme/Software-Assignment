@@ -1,1 +1,2 @@
-3A-3D.png
+for widget in self.window.winfo_children():
+            widget.destroy()
