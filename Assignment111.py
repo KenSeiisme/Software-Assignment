@@ -8,6 +8,12 @@ class Recipe_Organizer_System:
         # Set the window size
         self.window.geometry("400x500")
 
+        menubar = Menu(self.window)
+        self.window.config(menu=menubar)
+        operation_menu = Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Operations", menu=operation_menu)
+        operation_menu.add_command(label="Exit", command=self.window.quit)
+
         # username and password
         self.users = {
         "user01": "Kiyo2026",
@@ -99,6 +105,8 @@ class Recipe_Organizer_System:
         for widget in self.window.winfo_children():
             widget.destroy()
 
+        self.window.config(menu=Menu(self.window))
+
         self.window.title("Home")
         title = Label(self.window, text="Kiyo Recipe Organizer", font=("CourierNew", 20, "bold", "italic"))
         bR = Button(self.window, width=10, height=2, text="Register", command=self.register)
@@ -127,13 +135,22 @@ class Recipe_Organizer_System:
     def confirm_registration(self):
         username = self.username_entry.get()
         password = self.password_entry.get()
+        symb = any(c in password for c in '!@#$%^&')
 
-        if username in self.users:
+        # Password validation
+        if len(password) <5:
+            messagebox.showerror("Registration Failed", "Password must be at least 5 characters long.")
+            return False
+        elif symb == True:
+            messagebox.showerror("Registration Failed", "Password can only contain letters and numbers.")
+            return False
+        elif username in self.users:
             messagebox.showerror("Registration Failed", "Username already exists.")
+            return False
         else:
             self.users[username] = password
             messagebox.showinfo("Registration Successful", "Account created for {}!".format(username))
-            self.Recipe_Page()
+            self.homePage()
 
     def Recipe_Page(self):
 
@@ -143,15 +160,17 @@ class Recipe_Organizer_System:
         self.window.title("Kiyo Recipe Organizer")
         Label(self.window, text="Kiyo Recipe", font=("Times New Roman", 20, "bold", "italic")).pack(pady=10)
         ### not complete yet
-        menubar = Menu(self.window)
-        self.window.config(menu=menubar)
+        self.menubar = Menu(self.window)
+        self.window.config(menu=self.menubar)
 
-        operation_menu = Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Operations", menu=operation_menu)
+        operation_menu = Menu(self.menubar, tearoff=0)
+        self.menubar.add_cascade(label="Operations", menu=operation_menu)
         operation_menu.add_command(label="Create Recipe", command=self.create_recipe)
         operation_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
         operation_menu.add_command(label="Search Recipe", command=self.search_recipe)
-        operation_menu.add_command(label="Exit", command=self.window.quit)
+        operation_menu.add_separator()
+        operation_menu.add_command(label="Back to Home",  command=self.homePage)   
+        operation_menu.add_command(label="Exit", command=self.window.destroy)
         
         # Create a frame to hold the widgets
         self.recipe_frame = Frame(self.window)
