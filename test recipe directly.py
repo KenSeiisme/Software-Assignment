@@ -140,7 +140,7 @@ class Recipe_Organizer_System:
 
         self.window.title("Kiyo Recipe Organizer")
 
-        Label(self.window, text="Kiyo Recipe", font=("Times New Roman", 20, "bold", "italic")).pack(pady=10)
+        Label(self.window, text="Kiyo Recipe", font=("Times New Roman", 50, "bold", "italic")).pack(pady=10)
 
         menubar = Menu(self.window)
         self.window.config(menu=menubar)
@@ -152,8 +152,7 @@ class Recipe_Organizer_System:
         operation_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
         operation_menu.add_command(label="Search Recipe", command=self.search_recipe)
 
-        Label(self.window, text="Let's Taste!", font=("Times New Roman", 12, "bold"), fg="yellow").pack(pady=10)
-
+        Label(self.window, text="Let's Taste!", font=("Times New Roman", 25, "bold"), fg="blue").pack(pady=10)
 
         canvas = Canvas(self.window)
         vbar = Scrollbar(self.window, orient="vertical", command=canvas.yview)
@@ -163,7 +162,11 @@ class Recipe_Organizer_System:
         canvas.pack(side="left", fill="both", expand=True)
 
         card_frame = Frame(canvas)
-        canvas.create_window((0, 0), window=card_frame, anchor="nw")
+        canvas_window = canvas.create_window((0, 0), window=card_frame, anchor="nw")
+
+        canvas.bind("<Configure>", lambda e: canvas.itemconfig(canvas_window, width=e.width))
+
+        card_frame.columnconfigure(0, weight=1)
 
         card_frame.bind(
             "<Configure>",
@@ -178,10 +181,10 @@ class Recipe_Organizer_System:
         self.recipe_images = []
 
         for i, recipe in enumerate(recipes):
-            row, col = divmod(i, 2)
+            row, col = divmod(i, 3)
 
             card = Frame(card_frame)
-            card.grid(row=row, column=col, padx=10, pady=10)
+            card.grid(row=row, column=col + 1, padx=10, pady=10)
 
             image_path = project_folder / recipe["image"]
             photo = PhotoImage(file=str(image_path))
@@ -191,6 +194,7 @@ class Recipe_Organizer_System:
                 card,
                 image=photo,
                 text=recipe["name"],
+                font=("Arial", 15, "bold"),
                 compound="top",
                 command=lambda r=recipe: self.show_recipe(r)
             ).pack()
