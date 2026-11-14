@@ -152,16 +152,47 @@ class Recipe_Organizer_System:
         operation_menu.add_command(label="Log out", command=self.homePage)
         operation_menu.add_command(label="Create Recipe", command=self.create_recipe)
         operation_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
-        operation_menu.add_command(label="Search Recipe", command=self.search_recipe)
+        operation_menu.add_command(label="My Recipe", command=self.my_recipe)
+
 
         Label(self.window, text="Let's Taste!", font=("Times New Roman", 25, "bold"), fg="green").pack(pady=10)
+
+        # search frame
+        content = Frame(self.window)
+        content.pack(fill="both", expand=True)
+
+        search_frame = Frame(content)
+        search_frame.pack(side="left", anchor="n", padx=10, pady=10)
+        Label(search_frame, text="Search", font=("Arial", 12, "bold")).pack(side="left", anchor="n", padx=(0, 4))
+
+        input_frame = Frame(search_frame)
+        input_frame.pack(side="left", anchor="n", padx=10)
+
+        self.search_entry = Entry(input_frame, width=30, font=("Arial", 12))
+        self.search_entry.pack(anchor="w")
+
+        Label(input_frame, text="Search name/category/tags", fg="gray", font=("Arial", 10, "italic")).pack(anchor="w", pady=(5, 0))
+
+        Button(
+            search_frame,
+            text="Get",
+            font=("Arial", 10),
+            command=self.search_recipe
+        ).pack(side="left", anchor="n")
+
+        Button(input_frame, text="Create Recipe", width=15, height=2, bg="black", fg="white", font=("Arial", 13), command=self.create_recipe).pack(anchor="w", padx=10, pady=50)
+        Button(input_frame, text="Edit Recipe", width=15, height=2, bg="black", fg="white", font=("Arial", 13), command=self.edit_recipe).pack(anchor="w", padx=10, pady=50)
+        Button(input_frame, text="My Recipe", width=15, height=2, bg="black", fg="white", font=("Arial", 13), command=self.my_recipe).pack(anchor="w", padx=10, pady=50)
+
         # Create a canvas and scrollbar for scrolling through recipe cards
-        canvas = Canvas(self.window)
-        vbar = Scrollbar(self.window, orient="vertical", command=canvas.yview)
+        recipe_area = Frame(content)
+        recipe_area.pack(side="right", fill="both", expand=True)
+        canvas = Canvas(recipe_area)
+        vbar = Scrollbar(recipe_area, orient="vertical", command=canvas.yview)
         canvas.configure(yscrollcommand=vbar.set)
 
         vbar.pack(side="right", fill="y")
-        canvas.pack(side="left", fill="both", expand=True)
+        canvas.pack(side="right", fill="both", expand=True)
 
         # Create a frame to hold the recipe cards
         card_frame = Frame(canvas)
@@ -170,6 +201,9 @@ class Recipe_Organizer_System:
         canvas.bind("<Configure>", lambda e: canvas.itemconfig(canvas_window, width=e.width))
 
         card_frame.columnconfigure(0, weight=1)
+
+        for column in range(1, 4):
+            card_frame.grid_columnconfigure(column, uniform="recipe")
 
         card_frame.bind(
             "<Configure>",
@@ -184,19 +218,17 @@ class Recipe_Organizer_System:
         self.card_frame = card_frame
         self.display_Recipes(recipes)
 
-
-
-
-
     # IMPORTANT loop to search and display
     def display_Recipes(self, recipe_list):
+        for widget in self.card_frame.winfo_children():
+            widget.destroy()
         self.recipe_images = []
-
+        
         for i, recipe in enumerate(recipe_list):
             row, col = divmod(i, 3)
 
             card = Frame(self.card_frame)
-            card.grid(row=row, column=col + 1, padx=10, pady=10)
+            card.grid(row=row, column=col + 1, pady=10, padx=4)
 
             image_path = self.project_folder / recipe["image"]
             photo = PhotoImage(file=str(image_path))
@@ -247,12 +279,22 @@ class Recipe_Organizer_System:
         title_frame.pack()
 
         Label(title_frame, text=recipe['name'], font=("Times New Roman", 35, "bold", "italic")).pack(pady=15)
+
         # photo
         self.project_folder = Path(__file__).resolve().parent
         image_path = self.project_folder / recipe["image"]
         self.photo = PhotoImage(file=str(image_path))
         Label(title_frame, image=self.photo).pack(pady=5)
         Label(title_frame, text='Category: ' + recipe['category'], fg="purple", font=("Times New Roman", 13, "italic")).pack(pady=10)
+        Button(title_frame, 
+            text="Customize", 
+            bg="pink", 
+            font=("Arial", 10, "bold"), 
+            width=10, height=2, 
+            command=lambda: self.customize(recipe
+            )
+        ).pack(pady=5)
+
 
         # frame3
         self.details_frame = Frame(self.page_frame)
@@ -261,7 +303,6 @@ class Recipe_Organizer_System:
         ing_frame.pack(anchor="w", pady=20)
         #show ingredients
         Label(ing_frame, text="Ingredients:", font=("CourierNew", 20, "bold", "italic")).pack(anchor="w")
-        Button(self.details_frame, text="Customize", bg="yellow", font=("Arial", 10, "bold"), width=10, height=2, command=lambda: self.customize(recipe)).pack(anchor="center")
 
         for item in recipe["ingredients"]:
             ingredient_text = (
@@ -309,6 +350,8 @@ class Recipe_Organizer_System:
         Button(
             self.c_window, 
             text="Calculate",
+            width=8,
+            height=2,
             command=lambda: self.calculate_cuztomize(recipe, ingredient_box, amount_entry, self.result_frame
             )
         ).pack(pady=35)
@@ -353,14 +396,23 @@ class Recipe_Organizer_System:
                     font=("Arial", 12)
                 ).pack(anchor="w")
 
+    def search_recipe(self):
+        search_text = self.search_entry.get().strip().lower()
 
+        search_results = [
+            recipe for recipe in recipes
+            if search_text in recipe["name"].lower()
+            or search_text in recipe.get("category", "").lower()
+            or any(
+                search_text in tag.lower()
+                for tag in recipe.get("tags", [])
+            )
+        ]
 
-
-
-
+        self.display_Recipes(search_results)
 
 ###############################################################################################################################
-    def my_recipes(self, recipe):
+    def my_recipe(self, recipe):
         for widget in self.window.winfo_children():
             widget.destroy()
         self.window.title("My Recipes")
@@ -382,21 +434,6 @@ class Recipe_Organizer_System:
         # Here you can add code to save the customized recipe to a file or database
         messagebox.showinfo("Save Recipe", f"Customized recipe '{recipe['name']}' saved to My Recipes!")
         self.my_recipes(recipe)
-
-
-    def search_recipe(self):
-            # Create a new window for recipe searching
-            search_window = Toplevel()
-            search_window.title("Search Recipe")
-        
-            # Create a label and entry field for recipe name
-            Label(search_window, text="Recipe Name:").grid(row=0, column=0)
-            self.search_recipe_name_entry = Entry(search_window)
-            self.search_recipe_name_entry.grid(row=0, column=1)
-        
-            # Create a button to search for the recipe
-            search_button = Button(search_window, text="Search",width=10, height=2, command=self.perform_search)
-            search_button.grid(row=1, columnspan=2)
 
     def create_recipe(self):
             for widget in self.window.winfo_children():
