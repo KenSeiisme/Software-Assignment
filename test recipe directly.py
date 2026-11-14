@@ -230,7 +230,7 @@ class Recipe_Organizer_System:
             "<Configure>",
             lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
-        canvas.bind(
+        canvas.bind_all(
             "<MouseWheel>",
             lambda e: canvas.yview_scroll(int(-1 * (e.delta / 120)), "units")
         )
