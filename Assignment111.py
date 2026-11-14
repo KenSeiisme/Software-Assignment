@@ -1,13 +1,16 @@
 from tkinter import*
+from pathlib import Path
 from recipe import recipes
+from tkinter import PhotoImage
 from tkinter import messagebox
+from tkinter import Canvas, Scrollbar
 
 class Recipe_Organizer_System:
     def __init__(self):
         # Create the main window
         self.window = Tk()
         # Set the window size
-        self.window.geometry("900x500")
+        self.window.geometry("1200x744")
 
         menubar = Menu(self.window)
         self.window.config(menu=menubar)
@@ -75,7 +78,7 @@ class Recipe_Organizer_System:
             widget.destroy()
 
         self.window.title("Registration Center")
-        self.window.geometry("900x500")
+        self.window.geometry("1200x744")
 
 
         Label(self.window, text="Welcome!",font=("Times New Roman", 20, "bold", "italic")).pack(pady=20)
@@ -104,7 +107,7 @@ class Recipe_Organizer_System:
             widget.destroy()
 
         self.window.title("Login Center")
-        self.window.geometry("900x500")
+        self.window.geometry("1200x744")
 
 
         Label(self.window, text="Welcome back!", font=("Times New Roman", 20, "bold", "italic")).pack(pady=20)
@@ -116,7 +119,7 @@ class Recipe_Organizer_System:
         self.password_entry = Entry(self.window)
         self.password_entry.pack()
 
-         # Frame to hold the confirm and back button
+        # Frame to hold the confirm and back button
         self.login_frame = Frame(self.window)
         self.login_frame.pack()
         
@@ -166,10 +169,11 @@ class Recipe_Organizer_System:
             widget.destroy()
 
         self.window.title("Kiyo Recipe Organizer")
-        Label(self.window, text="Kiyo Recipe", font=("Times New Roman", 20, "bold", "italic")).pack(pady=10)
+        Label(self.window, text="Kiyo Recipe", font=("Times New Roman", 50, "bold", "italic")).pack(pady=10)
 
-        self.window.config(menu=Menu(self.window))
         menubar = Menu(self.window)
+        self.window.config(menu=menubar)
+
         self.window.config(menu=menubar)
         operation_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Operations", menu=operation_menu)
@@ -178,15 +182,132 @@ class Recipe_Organizer_System:
         operation_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
         operation_menu.add_command(label="Search Recipe", command=self.search_recipe)
 
+        Label(self.window, text="Let's Taste!", font=("Times New Roman", 25, "bold"), fg="blue").pack(pady=10)
+        # Create a canvas and scrollbar for scrolling through recipe cards
+        canvas = Canvas(self.window)
+        vbar = Scrollbar(self.window, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=vbar.set)
 
+        vbar.pack(side="right", fill="y")
+        canvas.pack(side="left", fill="both", expand=True)
 
+        # Create a frame to hold the recipe cards
+        card_frame = Frame(canvas)
+        canvas_window = canvas.create_window((0, 0), window=card_frame, anchor="nw")
 
+        canvas.bind("<Configure>", lambda e: canvas.itemconfig(canvas_window, width=e.width))
 
+        card_frame.columnconfigure(0, weight=1)
 
+        card_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
 
+        self.window.bind_all(
+            "<MouseWheel>",
+            lambda e: canvas.yview_scroll(int(-1 * (e.delta / 120)), "units")
+        )
+        self.project_folder = Path(__file__).resolve().parent
+        self.card_frame = card_frame
+        self.display_Recipes(recipes)
 
-        
-        
+    # IMPORTANT loop to search and display
+    def display_Recipes(self, recipe_list):
+        self.recipe_images = []
+
+        for i, recipe in enumerate(recipe_list):
+            row, col = divmod(i, 3)
+
+            card = Frame(self.card_frame)
+            card.grid(row=row, column=col + 1, padx=10, pady=10)
+
+            image_path = self.project_folder / recipe["image"]
+            photo = PhotoImage(file=str(image_path))
+            self.recipe_images.append(photo)
+
+            Button(
+                card,
+                image=photo,
+                text=recipe["name"],
+                font=("Arial", 15, "bold"),
+                compound="top",
+                command=lambda r=recipe: self.show_details(r)
+            ).pack()
+
+    def show_details(self, recipe):
+        for widget in self.window.winfo_children():
+            widget.destroy()
+        self.window.title(recipe["name"])
+        Button(self.window, text="Back", width=10, height=2, command=self.Recipe_Page).pack(anchor="nw", padx=10, pady=10)
+
+        # Scroll(frame1)
+        canvas = Canvas(self.window)
+        vbar = Scrollbar(self.window, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=vbar.set)
+
+        vbar.pack(side="right", fill="y")
+        canvas.pack(side="left", fill="both", expand=True)
+
+        # Create a frame to hold the recipe details
+        self.page_frame = Frame(canvas)
+        canvas_window = canvas.create_window((0, 0), window=self.page_frame, anchor="nw")
+
+        canvas.bind("<Configure>", lambda e: canvas.itemconfig(canvas_window, width=e.width))
+
+        self.page_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        canvas.bind(
+            "<MouseWheel>",
+            lambda e: canvas.yview_scroll(int(-1 * (e.delta / 120)), "units")
+        )
+
+        ### frame2
+        self.Title_frame = Frame(self.page_frame)
+        self.Title_frame.pack()
+        title_frame = Frame(self.Title_frame)
+        title_frame.pack()
+
+        Label(title_frame, text=recipe['name'], font=("Times New Roman", 35, "bold", "italic")).pack(pady=15)
+        # photo
+        self.project_folder = Path(__file__).resolve().parent
+        image_path = self.project_folder / recipe["image"]
+        self.photo = PhotoImage(file=str(image_path))
+        Label(title_frame, image=self.photo).pack(pady=5)
+        Label(title_frame, text='Category: ' + recipe['category'], fg="purple", font=("Times New Roman", 13, "italic")).pack(pady=10)
+
+        # frame3
+        self.details_frame = Frame(self.page_frame)
+        self.details_frame.pack()
+        ing_frame = Frame(self.details_frame)
+        ing_frame.pack(anchor="w", pady=20)
+        #show ingredients
+        Label(ing_frame, text="Ingredients:", font=("CourierNew", 20, "bold", "italic")).pack(anchor="w")
+        Button(self.details_frame, text="Customize", bg="yellow", font=("Arial", 10, "bold"), width=10, height=2, command=lambda: self.customize(recipe)).pack(anchor="center")
+
+        for item in recipe["ingredients"]:
+            ingredient_text = (
+            f'{item["name"]} ：'
+            f'{item["amount"] if item["amount"] is not None else ""} '
+            f'{item["unit"]}'
+        )
+            Label(ing_frame, text=ingredient_text, font=("Arial", 13)).pack(side="top", anchor="w", pady=2)
+
+        ins_frame = Frame(self.details_frame)
+        ins_frame.pack(pady=25)
+        #show instructions
+        Label(ins_frame, text="Instructions:", font=("CourierNew", 20, "bold", "italic")).pack()
+        # for loop
+        for i, step in enumerate(recipe["steps"], start=1):
+            Label(ins_frame, text=f"{i}. {step}", wraplength=1000, font=("Arial", 13)).pack(anchor="w", pady=5)
+
+    def customize():
+        c_window = Toplevel()
+        c_window.title("Customize Recipe")
+        c_window.geometry("500x500")
+
 #######################################################################################################################################        
     def create_recipe(self):
         for widget in self.window.winfo_children():

@@ -2,7 +2,7 @@
 recipes = [
     {
         "name": "Pan-Seared Butter Steak",
-        "image": "images.py/beef.png",
+        "image": "images/beef.png",
         "category": "Western",
         "tags": ["main course"],
         "ingredients": [
@@ -24,7 +24,7 @@ recipes = [
     },
     {
         "name": "Creamy Mushroom Soup",
-        "image": "images.py/soap.png",
+        "image": "images/soap.png",
         "category": "Western",
         "tags": ["soup"],
         "ingredients": [
@@ -49,7 +49,7 @@ recipes = [
     },
     {
         "name": "Teriyaki Chicken Don",
-        "image": "images.py/teri.png",
+        "image": "images/teri.png",
         "category": "Japanese",
         "tags": ["main course", "rice bowl"],
         "ingredients": [
@@ -71,7 +71,7 @@ recipes = [
     },
     {
         "name": "Gyudon",
-        "image": "images.py/gyudon.png",
+        "image": "images/gyudon.png",
         "category": "Japanese",
         "tags": ["main course", "rice bowl"],
         "ingredients": [
@@ -92,7 +92,7 @@ recipes = [
     },
     {
         "name": "Kimchi Jjigae",
-        "image": "images.py/kimchi.png",
+        "image": "images/kimchi.png",
         "category": "Korean",
         "tags": ["soup", "spicy"],
         "ingredients": [
@@ -117,7 +117,7 @@ recipes = [
     },
     {
         "name": "Tteokbokki",
-        "image": "images.py/tt.png",
+        "image": "images/tt.png",
         "category": "Korean",
         "tags": ["snack", "spicy"],
         "ingredients": [
@@ -140,8 +140,33 @@ recipes = [
         ],
     },
     {
+        "name": "Tuna Bibimbap",
+        "image": "images/tuna.png",
+        "category": "Korean",
+        "tags": ["main course", "rice bowl"],
+        "ingredients": [
+            {"name": "Hot cooked rice", "amount": 1, "unit": "bowl"},
+            {"name": "Canned tuna in oil", "amount": 0.5, "unit": "can", "notes": "drained"},
+            {"name": "Egg", "amount": 1, "unit": "piece", "notes": "fried sunny-side up"},
+            {"name": "Carrots", "amount": None, "unit": "to taste", "notes": "julienned"},
+            {"name": "Cucumber", "amount": None, "unit": "to taste", "notes": "julienned"},
+            {"name": "Bean sprouts", "amount": None, "unit": "to taste"},
+            {"name": "Roasted seaweed flakes", "amount": None, "unit": "to taste"},
+            {"name": "Korean red pepper paste", "amount": 1.5, "unit": "tbsp", "notes": "for the sauce"},
+            {"name": "Sesame oil", "amount": 1, "unit": "tbsp", "notes": "for the sauce"},
+            {"name": "Sprite or water", "amount": 1, "unit": "tbsp", "notes": "for the sauce"},
+            {"name": "White sesame seeds", "amount": None, "unit": "a little", "notes": "for the sauce"},
+        ],
+        "steps": [
+            "Blanch or lightly sauté the julienned carrots and bean sprouts separately, then toss with a pinch of salt and sesame oil.",
+            "Mix the Korean red pepper paste, sesame oil, Sprite or water, and sesame seeds in a small bowl until smooth.",
+            "Place the hot rice in a large bowl and neatly arrange the tuna, carrots, cucumber, bean sprouts, and seaweed flakes on top.",
+            "Place the fried egg in the center, drizzle with the bibimbap sauce, and mix well before eating.",
+        ],
+    },
+    {
         "name": "Tomato Scrambled Eggs",
-        "image": "images.py/egg.png",
+        "image": "images/egg.png",
         "category": "Chinese",
         "tags": ["home-style", "quick"],
         "ingredients": [
@@ -162,7 +187,7 @@ recipes = [
     },
     {
         "name": "Coca-Cola Chicken Wings",
-        "image": "images.py/coke.png",
+        "image": "images/coke.png",
         "category": "Chinese",
         "tags": ["home-style"],
         "ingredients": [
@@ -186,7 +211,7 @@ recipes = [
     },
     {
         "name": "Butter Chicken",
-        "image": "images.py/butter.png",
+        "image": "images/butter.png",
         "category": "Indian",
         "tags": ["main course", "curry"],
         "ingredients": [
@@ -213,7 +238,7 @@ recipes = [
     },
     {
         "name": "Aloo Jeera",
-        "image": "images.py/alo.png",
+        "image": "images/alo.png",
         "category": "Indian",
         "tags": ["side dish", "vegetarian"],
         "ingredients": [
@@ -235,7 +260,7 @@ recipes = [
     },
     {
         "name": "Nasi Lemak",
-        "image": "images.py/nasi.png",
+        "image": "images/nasi.png",
         "category": "Malay",
         "tags": ["main course", "rice"],
         "ingredients": [
@@ -260,7 +285,7 @@ recipes = [
     },
     {
         "name": "Ayam Goreng Berempah",
-        "image": "images.py/ayam.png",
+        "image": "images/ayam.png",
         "category": "Malay",
         "tags": ["main course", "fried"],
         "ingredients": [
@@ -285,7 +310,7 @@ recipes = [
     },
     {
         "name": "Spaghetti Aglio e Olio",
-        "image": "images.py/spa.png",
+        "image": "images/spa.png",
         "category": "Italian",
         "tags": ["main course", "pasta", "vegetarian"],
         "ingredients": [
@@ -306,7 +331,7 @@ recipes = [
     },
     {
         "name": "Skillet Margherita Pizza",
-        "image": "images.py/pizza.png",
+        "image": "images/pizza.png",
         "category": "Italian",
         "tags": ["main course", "quick"],
         "ingredients": [
@@ -324,7 +349,7 @@ recipes = [
     },
     {
         "name": "Mango Sago",
-        "image": "images.py/mango.png",
+        "image": "images/mango.png",
         "category": "Dessert",
         "tags": ["sweet soup", "chilled"],
         "ingredients": [
@@ -346,7 +371,7 @@ recipes = [
     },
     {
         "name": "Crème Caramel",
-        "image": "images.py/pud.png",
+        "image": "images/pud.png",
         "category": "Dessert",
         "tags": ["baking", "custard"],
         "ingredients": [
@@ -369,7 +394,7 @@ recipes = [
     },
     {
         "name": "Thai Iced Tea",
-        "image": "images.py/Thai.png",
+        "image": "images/Thai.png",
         "category": "Beverage",
         "tags": ["tea", "iced"],
         "ingredients": [
@@ -389,7 +414,7 @@ recipes = [
     },
     {
         "name": "Virgin Mojito",
-        "image": "images.py/mojito.png",
+        "image": "images/mojito.png",
         "category": "Beverage",
         "tags": ["mocktail", "sparkling"],
         "ingredients": [
@@ -404,6 +429,197 @@ recipes = [
             "Gently muddle to release the lime juice and mint aroma.",
             "Fill the glass with ice.",
             "Pour in sparkling water or Sprite and stir gently.",
+        ],
+    },
+    {
+        "name": "Spaghetti Bolognese",
+        "image": "images/bal.png",
+        "category": "Italian",
+        "tags": ["main course", "pasta"],
+        "ingredients": [
+            {"name": "Spaghetti", "amount": 120, "unit": "g"},
+            {"name": "Minced beef or pork-beef blend", "amount": 150, "unit": "g"},
+            {"name": "Onion", "amount": 0.5, "unit": "piece", "notes": "finely chopped"},
+            {"name": "Garlic", "amount": 2, "unit": "cloves", "notes": "minced"},
+            {"name": "Canned tomatoes or peeled diced fresh tomatoes", "amount": 200, "unit": "g"},
+            {"name": "Tomato paste", "amount": 1, "unit": "tbsp"},
+            {"name": "Olive oil", "amount": 1, "unit": "tbsp"},
+            {"name": "Black pepper", "amount": None, "unit": "to taste"},
+            {"name": "Salt", "amount": None, "unit": "to taste"},
+            {"name": "Dried basil", "amount": None, "unit": "to taste"},
+        ],
+        "steps": [
+            "Bring a pot of salted water to a boil and cook the spaghetti until al dente (1 minute less than package instructions), then drain.",
+            "Heat olive oil in a pan and sauté the chopped onion and minced garlic until translucent.",
+            "Add the minced meat, breaking it up and cooking until browned. Stir in the tomato paste and cook until fragrant.",
+            "Add the diced tomatoes and a splash of pasta water. Simmer over low heat for 10–15 minutes until thick, then season with salt, black pepper, and dried basil.",
+            "Toss the cooked spaghetti with the meat sauce until evenly coated and serve.",
+        ],
+    },
+    {
+        "name": "Creamy Bacon & Mushroom Pasta",
+        "image": "images/mushroom.png",
+        "category": "Italian",
+        "tags": ["main course", "pasta"],
+        "ingredients": [
+            {"name": "Spaghetti or fettuccine", "amount": 120, "unit": "g"},
+            {"name": "Bacon", "amount": 3, "unit": "strips", "notes": "cut into pieces"},
+            {"name": "Button mushrooms", "amount": 4, "unit": "pieces", "notes": "sliced"},
+            {"name": "Garlic", "amount": 2, "unit": "cloves", "notes": "sliced"},
+            {"name": "Heavy cream", "amount": 120, "unit": "ml"},
+            {"name": "Grated Parmesan cheese", "amount": 2, "unit": "tbsp"},
+            {"name": "Salt", "amount": None, "unit": "to taste"},
+            {"name": "Black pepper", "amount": None, "unit": "to taste"},
+        ],
+        "steps": [
+            "Cook the pasta in salted boiling water until done. Reserve half a bowl of pasta water before draining.",
+            "In a dry pan over medium heat, cook the bacon until crispy and fat renders out. Add the garlic and mushrooms and sauté until softened.",
+            "Pour in the heavy cream and a splash of pasta water, bringing it to a gentle simmer.",
+            "Add the cooked pasta, Parmesan cheese, black pepper, and salt. Toss quickly until the sauce thickens and coats the noodles.",
+        ],
+    },
+    {
+        "name": "Pesto Pasta",
+        "image": "images/luole.png",
+        "category": "Italian",
+        "tags": ["main course", "pasta"],
+        "ingredients": [
+            {"name": "Spaghetti", "amount": 120, "unit": "g"},
+            {"name": "Basil pesto", "amount": 2, "unit": "tbsp"},
+            {"name": "Cherry tomatoes", "amount": 5, "unit": "pieces", "notes": "halved"},
+            {"name": "Chicken breast", "amount": 100, "unit": "g", "notes": "sliced, optional"},
+            {"name": "Olive oil", "amount": 1, "unit": "tbsp"},
+            {"name": "Salt", "amount": None, "unit": "to taste"},
+            {"name": "Black pepper", "amount": None, "unit": "to taste"},
+        ],
+        "steps": [
+            "Boil the spaghetti in salted water until cooked, reserving a little pasta water.",
+            "Heat olive oil in a pan, pan-sear the sliced chicken breast with a pinch of salt and black pepper until cooked through, then briefly toss in the cherry tomatoes.",
+            "Turn off the heat (to keep the pesto bright green), then add the spaghetti, basil pesto, and 2 tablespoons of pasta water.",
+            "Toss well using the residual heat until the pesto evenly coats the pasta.",
+        ],
+    },
+    {
+        "name": "Nasi Goreng Kampung",
+        "image": "images/kampung.png",
+        "category": "Malay",
+        "tags": ["main course", "rice", "spicy"],
+        "ingredients": [
+            {"name": "Day-old cooked rice", "amount": 1, "unit": "bowl"},
+            {"name": "Dried anchovies (Ikan Bilis)", "amount": 1, "unit": "handful"},
+            {"name": "Water spinach (Kangkung)", "amount": 1, "unit": "handful", "notes": "cut into sections"},
+            {"name": "Egg", "amount": 1, "unit": "piece"},
+            {"name": "Shallots", "amount": 3, "unit": "pieces", "notes": "pounded into paste"},
+            {"name": "Garlic", "amount": 2, "unit": "cloves", "notes": "pounded into paste"},
+            {"name": "Bird's eye chilies", "amount": 2, "unit": "pieces", "notes": "pounded into paste"},
+            {"name": "Shrimp paste (Belacan)", "amount": 0.5, "unit": "small piece", "notes": "pounded into paste"},
+            {"name": "Fish sauce or light soy sauce", "amount": 1, "unit": "tbsp"},
+            {"name": "Cooking oil", "amount": None, "unit": "as needed"},
+        ],
+        "steps": [
+            "Heat oil in a wok and fry the dried anchovies until crispy. Remove and set aside, then scramble the egg in the remaining oil and remove.",
+            "Leave a little oil in the wok and stir-fry the pounded spice paste over low heat until fragrant.",
+            "Add the cold rice and stir-fry over high heat until separated, seasoning with fish sauce or light soy sauce.",
+            "Toss in the water spinach, scrambled egg, and half of the fried anchovies. Stir-fry until the greens wilt, then top with the remaining anchovies before serving.",
+        ],
+    },
+    {
+        "name": "Yangzhou Fried Rice",
+        "image": "images/rice.png",
+        "category": "Chinese",
+        "tags": ["main course", "rice"],
+        "ingredients": [
+            {"name": "Day-old cooked rice", "amount": 1, "unit": "bowl"},
+            {"name": "Eggs", "amount": 2, "unit": "pieces", "notes": "beaten"},
+            {"name": "Peeled shrimp", "amount": 6, "unit": "pieces"},
+            {"name": "Char siu or ham", "amount": 50, "unit": "g", "notes": "diced"},
+            {"name": "Green peas, corn, and diced carrots", "amount": None, "unit": "to taste"},
+            {"name": "Spring onion", "amount": None, "unit": "a little", "notes": "chopped"},
+            {"name": "Salt", "amount": None, "unit": "to taste"},
+            {"name": "Cooking oil", "amount": None, "unit": "as needed"},
+        ],
+        "steps": [
+            "Marinate the shrimp with a pinch of salt and cooking wine, then blanch until cooked. Blanch the peas, corn, and carrots, then drain.",
+            "Heat oil in a wok, pour in the beaten eggs, and scramble quickly into small curds.",
+            "Add the cold rice and stir-fry over high heat until the grains are separated.",
+            "Add the diced char siu, shrimp, and mixed vegetables. Stir-fry evenly, season with salt, and garnish with spring onion.",
+        ],
+    },
+    {
+        "name": "Katsudon",
+        "image": "images/katsu.png",
+        "category": "Japanese",
+        "tags": ["main course", "rice bowl"],
+        "ingredients": [
+            {"name": "Breaded pork cutlet (Tonkatsu)", "amount": 1, "unit": "piece", "notes": "cooked and sliced"},
+            {"name": "Onion", "amount": 0.25, "unit": "piece", "notes": "thinly sliced"},
+            {"name": "Eggs", "amount": 2, "unit": "pieces", "notes": "lightly beaten"},
+            {"name": "Cooked rice", "amount": 1, "unit": "bowl"},
+            {"name": "Spring onion", "amount": None, "unit": "a little", "notes": "chopped"},
+            {"name": "Water or dashi", "amount": 100, "unit": "ml", "notes": "for the sauce"},
+            {"name": "Soy sauce", "amount": 1.5, "unit": "tbsp", "notes": "for the sauce"},
+            {"name": "Mirin", "amount": 1.5, "unit": "tbsp", "notes": "for the sauce"},
+            {"name": "Sugar", "amount": 1, "unit": "tsp", "notes": "for the sauce"},
+        ],
+        "steps": [
+            "Combine the water or dashi, soy sauce, mirin, sugar, and sliced onion in a small skillet. Simmer over medium heat until the onion softens.",
+            "Place the sliced pork cutlet on top of the onions.",
+            "Pour half of the beaten eggs around the edges, cover, and cook for 30 seconds. Pour in the remaining eggs and spring onion, cover, turn off the heat, and let sit for 15 seconds until softly set.",
+            "Slide the pork cutlet, egg, and sauce over a bowl of hot rice.",
+        ],
+    },
+    {
+        "name": "Iced Matcha Latte",
+        "image": "images/matcha.png",
+        "category": "Beverage",
+        "tags": ["tea", "iced"],
+        "ingredients": [
+            {"name": "Matcha powder", "amount": 4, "unit": "g", "notes": "about 1.5 tsp"},
+            {"name": "Warm water (70°C)", "amount": 40, "unit": "ml"},
+            {"name": "Milk", "amount": 200, "unit": "ml"},
+            {"name": "Simple syrup or honey", "amount": 1, "unit": "tbsp"},
+            {"name": "Ice", "amount": None, "unit": "enough to fill a glass"},
+        ],
+        "steps": [
+            "Sift the matcha powder into a small bowl and add the warm water.",
+            "Whisk briskly with a bamboo whisk or handheld frother until completely smooth and frothy.",
+            "Fill a glass with ice, simple syrup or honey, and milk.",
+            "Slowly pour the whisked matcha over the milk to create a layered gradient.",
+        ],
+    },
+    {
+        "name": "Passion Fruit Yakult Fizz",
+        "image": "images/yakult.png",
+        "category": "Beverage",
+        "tags": ["mocktail", "sparkling"],
+        "ingredients": [
+            {"name": "Fresh passion fruit", "amount": "1–2", "unit": "pieces"},
+            {"name": "Yakult", "amount": 1, "unit": "bottle", "notes": "100 ml"},
+            {"name": "Honey", "amount": 1, "unit": "tbsp"},
+            {"name": "Unsweetened sparkling water", "amount": 150, "unit": "ml"},
+            {"name": "Ice", "amount": None, "unit": "enough to fill a glass"},
+        ],
+        "steps": [
+            "Scoop the passion fruit pulp into the bottom of a glass and stir in the honey.",
+            "Fill the glass with ice and pour in the sparkling water until 80% full.",
+            "Slowly pour the bottle of Yakult over the top and stir before drinking.",
+        ],
+    },
+    {
+        "name": "Banana Milk Smoothie",
+        "image": "images/banana.png",
+        "category": "Beverage",
+        "tags": ["smoothie", "chilled"],
+        "ingredients": [
+            {"name": "Ripe banana", "amount": 1, "unit": "piece", "notes": "frozen and sliced works best"},
+            {"name": "Milk", "amount": 200, "unit": "ml"},
+            {"name": "Honey or condensed milk", "amount": 1, "unit": "tsp", "notes": "optional"},
+            {"name": "Ice cubes", "amount": "5–6", "unit": "cubes", "notes": "if using room-temperature banana"},
+        ],
+        "steps": [
+            "Combine the banana, milk, ice cubes, and honey or condensed milk in a blender.",
+            "Blend on high speed for about 30 seconds until completely smooth.",
+            "Pour into a glass and serve immediately.",
         ],
     },
 ]
