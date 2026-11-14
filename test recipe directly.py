@@ -293,6 +293,28 @@ class Recipe_Organizer_System:
 
         Button(c_window, text="Save to My Recipes", font=("Arial", 10, "bold"), width=15, height=5, command=lambda: self.save_customized_recipe(recipe)).pack(anchor="center", pady=10)
         
+    def my_recipes(self, recipe):
+        for widget in self.window.winfo_children():
+            widget.destroy()
+        self.window.title("My Recipes")
+        Label(self.window, text="My Recipes", font=("Times New Roman", 30, "bold", "italic")).pack(pady=10)
+        # Get the recipe details from the entry fields
+        recipe_name = recipe['name']
+        ingredients = recipe['ingredients']
+        instructions = recipe['steps']
+    
+        # Here you can add code to save the recipe details to a file or database
+        print(f"Recipe Name: {recipe_name}")
+        print(f"Ingredients: {ingredients}")
+        print(f"Instructions: {instructions}")
+
+
+        Button(self.window, text="Back", width=10, height=2, command=self.Recipe_Page).pack(anchor="nw", padx=10, pady=10)
+
+    def save_customized_recipe(self, recipe):
+        # Here you can add code to save the customized recipe to a file or database
+        messagebox.showinfo("Save Recipe", f"Customized recipe '{recipe['name']}' saved to My Recipes!")
+        self.my_recipes(recipe)
 
 
     def search_recipe(self):
@@ -393,9 +415,7 @@ class Recipe_Organizer_System:
             print(f"Edited Ingredients: {ingredients}")
             print(f"Edited Instructions: {instructions}")   
 
-    def save_customized_recipe(self, recipe):
-        # Here you can add code to save the customized recipe to a file or database
-        messagebox.showinfo("Save Recipe", f"Customized recipe '{recipe['name']}' saved to My Recipes!")
+
 
     
 
