@@ -4,6 +4,7 @@ from tkinter import messagebox
 from recipe import recipes
 from tkinter import PhotoImage
 from tkinter import Canvas, Scrollbar
+from tkinter import ttk
     
 class Recipe_Organizer_System:
     def __init__(self):
@@ -153,7 +154,7 @@ class Recipe_Organizer_System:
         operation_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
         operation_menu.add_command(label="Search Recipe", command=self.search_recipe)
 
-        Label(self.window, text="Let's Taste!", font=("Times New Roman", 25, "bold"), fg="blue").pack(pady=10)
+        Label(self.window, text="Let's Taste!", font=("Times New Roman", 25, "bold"), fg="green").pack(pady=10)
         # Create a canvas and scrollbar for scrolling through recipe cards
         canvas = Canvas(self.window)
         vbar = Scrollbar(self.window, orient="vertical", command=canvas.yview)
@@ -182,6 +183,10 @@ class Recipe_Organizer_System:
         self.project_folder = Path(__file__).resolve().parent
         self.card_frame = card_frame
         self.display_Recipes(recipes)
+
+
+
+
 
     # IMPORTANT loop to search and display
     def display_Recipes(self, recipe_list):
@@ -275,24 +280,86 @@ class Recipe_Organizer_System:
             Label(ins_frame, text=f"{i}. {step}", wraplength=3000, font=("Arial", 13)).pack(anchor="w", pady=5)
 
     def customize(self, recipe):
-        c_window = Toplevel()
-        c_window.title("Customize Recipe")
-        c_window.geometry("500x500")
-        c_window.config(menu=Menu(c_window))   
+        self.c_window = Toplevel()
+        self.c_window.title("Customize Recipe")
+        self.c_window.geometry("550x500")
+        self.c_window.config(menu=Menu(self.c_window))   
 
-        Label(c_window, text=f"Customize: {recipe['name']}",
-            font=("Times New Roman", 16, "bold")).pack(pady=10)
+        Label(self.c_window, text=f"Customize: {recipe['name']}",
+            font=("Times New Roman", 20, "bold")).pack(pady=10)
+
+        Label(self.c_window, text="Select an ingredient:", font=("Arial", 10)).pack(pady=(15,0))
+        
+        ingredient_text = [
+            item["name"]
+            for item in recipe["ingredients"]
+            if item["amount"] is not None and item["amount"] >0 
+        ]        
+    
+        ingredient_box = ttk.Combobox(self.c_window, values=ingredient_text ,state="readonly", font=("Arial", 10))
+        ingredient_box.pack()
+
+        Label(self.c_window, text="Enter amount you have:", font=("Arial", 10)).pack(pady=(25,0))
+        amount_entry = Entry(self.c_window, font=("Arial", 10))
+        amount_entry.pack()
+
+        self.result_frame = Frame(self.c_window)
+        self.result_frame.pack()
+
+        Button(
+            self.c_window, 
+            text="Calculate",
+            command=lambda: self.calculate_cuztomize(recipe, ingredient_box, amount_entry, self.result_frame
+            )
+        ).pack(pady=35)
+
+    def calculate_cuztomize(self, recipe, ingredient_box, amount_entry, result_frame):
+        selected = ingredient_box.get()
+        user_entry = amount_entry.get()
+
+        if not selected:
+            messagebox.showerror("Error", "Please select an ingredient.")
+            return
+        if not user_entry.strip():
+            messagebox.showerror("Errror", "Please enter a number.")
+            return
+        try:
+            user_entry = float(user_entry)
+            if user_entry <= 0:
+                messagebox.showerror("Error", "Amount must be greater than 0.")
+                return
+        except ValueError:
+            messagebox.showerror("Error", "Please enter a valid number.")
+            return
 
         for item in recipe["ingredients"]:
-            row = Frame(c_window); row.pack(fill="x", padx=10, pady=2)
-            Label(row, text=item["name"], width=20, anchor="w").pack(side="left")
-            Label(row, text=f"({item['unit']})", width=20, anchor="w").pack(side="left")
-            var = DoubleVar(value=item.get("amount") or 1)
-            Spinbox(row, from_=0, to=100, increment=0.1,
-                    textvariable=var, width=8).pack(side="left")
+            if item["name"] == selected:
+                original_amount = item["amount"]
+                break
 
-        Button(c_window, text="Save to My Recipes", font=("Arial", 10, "bold"), width=15, height=5, command=lambda: self.save_customized_recipe(recipe)).pack(anchor="center", pady=10)
-        
+        # Formula to calculate
+        ratio = user_entry / original_amount
+
+        for widget in self.result_frame.winfo_children():
+            widget.destroy()
+
+        Label(self.result_frame, text="Customized Ingredients:", fg="blue", font=("CourierNew", 14, "bold", "italic")).pack(pady=(30,5))
+        for item in recipe["ingredients"]:
+            if item["amount"] is not None:
+                new_amount = item["amount"] * ratio
+
+                Label(result_frame,
+                    text=f'{item["name"]}: {new_amount:.2f} {item["unit"]}',
+                    font=("Arial", 12)
+                ).pack(anchor="w")
+
+
+
+
+
+
+
+###############################################################################################################################
     def my_recipes(self, recipe):
         for widget in self.window.winfo_children():
             widget.destroy()
