@@ -5,6 +5,8 @@ from tkinter import PhotoImage
 from tkinter import messagebox
 from tkinter import Canvas, Scrollbar
 
+import recipe
+
 class Recipe_Organizer_System:
     def __init__(self):
         # Create the main window
@@ -259,7 +261,7 @@ class Recipe_Organizer_System:
             "<Configure>",
             lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
-        canvas.bind(
+        canvas.bind_all(
             "<MouseWheel>",
             lambda e: canvas.yview_scroll(int(-1 * (e.delta / 120)), "units")
         )
@@ -303,10 +305,26 @@ class Recipe_Organizer_System:
         for i, step in enumerate(recipe["steps"], start=1):
             Label(ins_frame, text=f"{i}. {step}", wraplength=1000, font=("Arial", 13)).pack(anchor="w", pady=5)
 
-    def customize():
+    def customize(self, recipe):
         c_window = Toplevel()
         c_window.title("Customize Recipe")
         c_window.geometry("500x500")
+        c_window.config(menu=Menu(c_window))   
+
+        Label(c_window, text=f"Customize: {recipe['name']}",
+            font=("Times New Roman", 16, "bold")).pack(pady=10)
+
+        for item in recipe["ingredients"]:
+            row = Frame(c_window); row.pack(fill="x", padx=10, pady=2)
+            Label(row, text=item["name"], width=20, anchor="w").pack(side="left")
+            Label(row, text=f"({item['unit']})", width=20, anchor="w").pack(side="left")
+            var = DoubleVar(value=item.get("amount") or 1)
+            Spinbox(row, from_=0, to=100, increment=0.1,
+                    textvariable=var, width=8).pack(side="left")
+
+        Button(c_window, text="Save to My Recipes", font=("Arial", 10, "bold"), width=15, height=5, command=lambda: self.save_customized_recipe(recipe)).pack(anchor="center", pady=10)
+
+
 
 #######################################################################################################################################        
     def create_recipe(self):
@@ -394,6 +412,10 @@ class Recipe_Organizer_System:
         # Create a button to search for the recipe
         search_button = Button(search_window, text="Search", command=self.perform_search)
         search_button.grid(row=1, columnspan=2)
+
+    def save_customized_recipe(self, recipe):
+        # Here you can add code to save the customized recipe to a file or database
+        messagebox.showinfo("Save Recipe", f"Customized recipe '{recipe['name']}' saved to My Recipes!")
     
         
          
