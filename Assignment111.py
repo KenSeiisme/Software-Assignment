@@ -202,7 +202,7 @@ class Recipe_Organizer_System:
 
         Label(self.window, text="Let's Taste!", font=("Times New Roman", 25, "bold"), fg="blue").pack(pady=10)
 
-        # search frame
+        ### Search frame
         content = Frame(self.window)
         content.pack(fill="both", expand=True)
 
