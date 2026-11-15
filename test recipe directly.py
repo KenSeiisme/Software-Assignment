@@ -19,19 +19,9 @@ class Recipe_Organizer_System:
         menubar.add_cascade(label="Operations", menu=operation_menu)
         operation_menu.add_command(label="Exit", command=self.window.quit)
 
-        # username and password
-        self.users = {
-        "user01": "Kiyo2026",
-        "user02": "Mango123",
-        "user03": "Rice888",
-        "user04": "Soup000",
-        "user05": "Noodle111",
-        "user06": "Burger999",
-        "user07": "Cookie321",
-        "user08": "Peach321",
-        "user09": "Tofu000",
-        "user10": "Curry777",
-    }
+        self.USER_FILE = Path(__file__).resolve().parent / "user.txt"
+        self.users = self.load_users()
+
         self.window.title("Home")
         title = Label(self.window, text="Kiyo Recipe Organizer", font=("CourierNew", 20, "bold", "italic"))
         bR = Button(self.window, width=10, height=2, text="Register", command=self.register)
@@ -72,6 +62,44 @@ class Recipe_Organizer_System:
         canvas.pack()
         bR.pack(pady=2)
         bS.pack(pady=10) 
+
+    ### Save user data to a file
+    def save_users(self, users):
+        lines = [f"{username}:{password}" for username, password in users.items()]
+        self.USER_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    def load_users(self):
+        users = {}
+        if self.USER_FILE.exists():
+            lines = self.USER_FILE.read_text(encoding="utf-8").splitlines()
+            for line in lines:
+                username, password = line.split(":")
+                users[username] = password
+        return users
+
+    ### Confirm by register
+    def confirm_registration(self):
+        username = self.username_entry.get()
+        password = self.password_entry.get()
+
+        # Password validation
+        if len(username) == 0:
+            messagebox.showerror("Registration Failed", "Username cannot be empty.")
+            return False
+        elif len(password) <5:
+            messagebox.showerror("Registration Failed", "Password must be at least 5 characters long.")
+            return False
+        elif not password.isalnum():
+            messagebox.showerror("Registration Failed", "Password can only contain letters and numbers.")
+            return False
+        elif username in self.users:
+            messagebox.showerror("Registration Failed", "Username already exists.")
+            return False
+        else:
+            self.users[username] = password
+            self.save_users(self.users)
+            messagebox.showinfo("Registration Successful", "Account created for {}!".format(username))
+            self.homePage()      
     
     def register(self):
         # New page
