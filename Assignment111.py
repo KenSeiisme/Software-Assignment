@@ -490,7 +490,7 @@ class Recipe_Organizer_System:
         for widget in self.window.winfo_children():
             widget.destroy()
         self.window.title("My Recipes")
-        Label(self.window, text="My Recipes", font=("Times New Roman", 30, "bold", "italic")).pack(pady=10)
+        Label(self.window, text="My Recipes", bg=BG_COLOR, fg=FG_COLOR, font=("Times New Roman", 30, "bold", "italic")).pack(pady=10)
 
         Button(self.window, text="Back", bg=BTN_COLOR, fg=FG_COLOR, width=10, height=2, command=self.Recipe_Page).pack(anchor="nw", padx=10, pady=10)
 
