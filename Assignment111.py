@@ -81,6 +81,35 @@ class Recipe_Organizer_System:
                 users[username] = password
         return users
 
+    ### Confirm by register
+    def confirm_registration(self):
+        username = self.username_entry.get().strip()
+        password = self.password_entry.get().strip()
+
+        # Password validation
+        if len(username) == 0:
+            messagebox.showerror("Registration Failed", "Username cannot be empty.")
+            return False
+        ### To avoid file corruption that may contain (:)
+        elif not username.isalnum():
+            messagebox.showerror("Registration Failed", "Username can only contain letters and numbers.")
+            return False
+        elif len(password) <5:
+            messagebox.showerror("Registration Failed", "Password must be at least 5 characters long.")
+            return False
+        ### Check if the password contain only letters and numbers
+        elif not password.isalnum():
+            messagebox.showerror("Registration Failed", "Password can only contain letters and numbers.")
+            return False
+        elif username in self.users:
+            messagebox.showerror("Registration Failed", "Username already exists.")
+            return False
+        else:
+            self.users[username] = password
+            ### Save the updated user data to the file
+            self.save_users(self.users)
+            messagebox.showinfo("Registration Successful", "Account created for {}!".format(username))
+            self.homePage()
     
     def register(self):
         # New page
@@ -111,6 +140,17 @@ class Recipe_Organizer_System:
         Button(button_frame, text="Back", width=10, height=2, command=self.homePage).pack(side="left", padx=5, pady=(20, 0))
         Button(button_frame, text="Confirm", width=10, height=2, command=self.confirm_registration).pack(side="left", padx=5, pady=(20, 0))
 
+    ### Confirm by sign in
+    def confirm_login(self):
+        username = self.username_entry.get().strip()
+        password = self.password_entry.get().strip()
+
+        if username in self.users and self.users[username] == password:
+            messagebox.showinfo("Login Successful", "Welcome back, {}!".format(username))
+            self.Recipe_Page()
+        else:
+            messagebox.showerror("Login Failed", "Invalid username or password.")
+
     def login(self):
         # New page
         for widget in self.window.winfo_children():
@@ -137,49 +177,10 @@ class Recipe_Organizer_System:
         button_frame.pack(pady=10)
         
         Button(button_frame, text="Back", width=10, height=2, command=self.homePage).pack(side="left", padx=5, pady=(20, 0))
-        Button(button_frame, text="Confirm", width=10, height=2, command=self.confirm_login).pack(side="left", padx=5, pady=(20, 0))
+        Button(button_frame, text="Confirm", width=10, height=2, command=self.confirm_login).pack(side="left", padx=5, pady=(20, 0)) 
 
-    ### Confirm by sign in
-    def confirm_login(self):
-        username = self.username_entry.get().strip()
-        password = self.password_entry.get().strip()
-
-        if username in self.users and self.users[username] == password:
-            messagebox.showinfo("Login Successful", "Welcome back, {}!".format(username))
-            self.Recipe_Page()
-        else:
-            messagebox.showerror("Login Failed", "Invalid username or password.")
-
-    ### Confirm by register
-    def confirm_registration(self):
-        username = self.username_entry.get().strip()
-        password = self.password_entry.get().strip()
-
-        # Password validation
-        if len(username) == 0:
-            messagebox.showerror("Registration Failed", "Username cannot be empty.")
-            return False
-        ### To avoid file corruption that may contain (:)
-        elif not username.isalnum():
-            messagebox.showerror("Registration Failed", "Username can only contain letters and numbers.")
-            return False
-        elif len(password) <5:
-            messagebox.showerror("Registration Failed", "Password must be at least 5 characters long.")
-            return False
-        ### Check if the password contain only letters and numbers
-        elif not password.isalnum():
-            messagebox.showerror("Registration Failed", "Password can only contain letters and numbers.")
-            return False
-        elif username in self.users:
-            messagebox.showerror("Registration Failed", "Username already exists.")
-            return False
-        else:
-            self.users[username] = password
-            ### Save the updated user data to the file
-            self.save_users(self.users)
-            messagebox.showinfo("Registration Successful", "Account created for {}!".format(username))
-            self.homePage()
-
+    ##############################################################################################################################
+    ##############################################################################################################################
     def Recipe_Page(self):
         for widget in self.window.winfo_children():
             widget.destroy()
@@ -196,8 +197,7 @@ class Recipe_Organizer_System:
         operation_menu.add_command(label="Log out", command=self.homePage)
         operation_menu.add_command(label="Create Recipe", command=self.create_recipe)
         operation_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
-        operation_menu.add_command(label="Search Recipe", command=self.search_recipe)
-        operation_menu.add_command(label="Edit Recipe", command=self.my_recipe)
+        operation_menu.add_command(label="My Recipes", command=self.my_recipe)
 
 
         Label(self.window, text="Let's Taste!", font=("Times New Roman", 25, "bold"), fg="blue").pack(pady=10)
@@ -457,6 +457,7 @@ class Recipe_Organizer_System:
 
         self.display_Recipes(search_results)
 
+#######################################################################################################################################        
     def my_recipe(self, recipe):
         for widget in self.window.winfo_children():
             widget.destroy()
@@ -473,10 +474,15 @@ class Recipe_Organizer_System:
         print(f"Instructions: {instructions}")
 
 
-        Button(self.window, text="Back", width=10, height=2, command=self.Recipe_Page).pack(anchor="nw", padx=10, pady=10)    
+        Button(self.window, text="Back", width=10, height=2, command=self.Recipe_Page).pack(anchor="nw", padx=10, pady=10)
 
+    def save_customized_recipe(self, recipe):
+        # Here you can add code to save the customized recipe to a file or database
+        messagebox.showinfo("Save Recipe", f"Customized recipe '{recipe['name']}' saved to My Recipes!")
+        self.my_recipes(recipe)
 
-#######################################################################################################################################        
+    
+    
     def create_recipe(self):
         for widget in self.window.winfo_children():
             widget.destroy()
@@ -548,26 +554,17 @@ class Recipe_Organizer_System:
         back_button.pack(side="left", padx=5)
         save_button = Button(button_frame, text="Save Changes", width=10, height=2, command=self.save_edited_recipe)
         save_button.pack(side="left", padx=5)
-        
-    def search_recipe(self):
-        # Create a new window for recipe searching
-        search_window = Toplevel()
-        search_window.title("Search Recipe")
-    
-        # Create a label and entry field for recipe name
-        Label(search_window, text="Recipe Name:").grid(row=0, column=0)
-        self.search_recipe_name_entry = Entry(search_window)
-        self.search_recipe_name_entry.grid(row=0, column=1)
-    
-        # Create a button to search for the recipe
-        search_button = Button(search_window, text="Search", command=self.perform_search)
-        search_button.grid(row=1, columnspan=2)
 
-    def save_customized_recipe(self, recipe):
-        # Here you can add code to save the customized recipe to a file or database
-        messagebox.showinfo("Save Recipe", f"Customized recipe '{recipe['name']}' saved to My Recipes!")
-    
+    def save_edited_recipe(self):
+            # Get the edited recipe details from the entry fields
+            recipe_name = self.recipe_name_entry.get()
+            ingredients = self.ingredients_entry.get()
+            instructions = self.instructions_entry.get()
         
-         
-          
+            # Here you can add code to save the edited recipe details to a file or database
+            print(f"Edited Recipe Name: {recipe_name}")
+            print(f"Edited Ingredients: {ingredients}")
+            print(f"Edited Instructions: {instructions}")   
+
+
 Recipe_Organizer_System()

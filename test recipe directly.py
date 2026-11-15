@@ -537,15 +537,15 @@ class Recipe_Organizer_System:
           
 
     def save_edited_recipe(self):
-            # Get the edited recipe details from the entry fields
-            recipe_name = self.recipe_name_entry.get()
-            ingredients = self.ingredients_entry.get()
-            instructions = self.instructions_entry.get()
-        
-            # Here you can add code to save the edited recipe details to a file or database
-            print(f"Edited Recipe Name: {recipe_name}")
-            print(f"Edited Ingredients: {ingredients}")
-            print(f"Edited Instructions: {instructions}")   
+        # Get the edited recipe details from the entry fields
+        recipe_name = self.recipe_name_entry.get()
+        ingredients = self.ingredients_entry.get()
+        instructions = self.instructions_entry.get()
+    
+        # Here you can add code to save the edited recipe details to a file or database
+        print(f"Edited Recipe Name: {recipe_name}")
+        print(f"Edited Ingredients: {ingredients}")
+        print(f"Edited Instructions: {instructions}")   
 
 
 
