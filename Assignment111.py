@@ -19,6 +19,7 @@ class Recipe_Organizer_System:
         menubar.add_cascade(label="Operations", menu=operation_menu)
         operation_menu.add_command(label="Exit", command=self.window.quit)
 
+        ### Load user data from a file
         self.USER_FILE = Path(__file__).resolve().parent / "user.txt"
         self.users = self.load_users()
 
@@ -63,16 +64,20 @@ class Recipe_Organizer_System:
         bR.pack(pady=2)
         bS.pack(pady=10) 
 
+    ### Save user data to a file
     def save_users(self, users):
         lines = [f"{username}:{password}" for username, password in users.items()]
+        ### Save the user data to the file with UTF-8 encoding
         self.USER_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
+    ### Load user data from a file
     def load_users(self):
         users = {}
         if self.USER_FILE.exists():
             lines = self.USER_FILE.read_text(encoding="utf-8").splitlines()
             for line in lines:
-                username, password = line.split(":")
+                ### Split the line into username and password
+                username, password = line.split(":", 1)
                 users[username] = password
         return users
 
@@ -136,8 +141,8 @@ class Recipe_Organizer_System:
 
     ### Confirm by sign in
     def confirm_login(self):
-        username = self.username_entry.get()
-        password = self.password_entry.get()
+        username = self.username_entry.get().strip()
+        password = self.password_entry.get().strip()
 
         if username in self.users and self.users[username] == password:
             messagebox.showinfo("Login Successful", "Welcome back, {}!".format(username))
@@ -147,16 +152,21 @@ class Recipe_Organizer_System:
 
     ### Confirm by register
     def confirm_registration(self):
-        username = self.username_entry.get()
-        password = self.password_entry.get()
+        username = self.username_entry.get().strip()
+        password = self.password_entry.get().strip()
 
         # Password validation
         if len(username) == 0:
             messagebox.showerror("Registration Failed", "Username cannot be empty.")
             return False
+        ### To avoid file corruption that may contain (:)
+        elif not username.isalnum():
+            messagebox.showerror("Registration Failed", "Username can only contain letters and numbers.")
+            return False
         elif len(password) <5:
             messagebox.showerror("Registration Failed", "Password must be at least 5 characters long.")
             return False
+        ### Check if the password contain only letters and numbers
         elif not password.isalnum():
             messagebox.showerror("Registration Failed", "Password can only contain letters and numbers.")
             return False
@@ -165,6 +175,7 @@ class Recipe_Organizer_System:
             return False
         else:
             self.users[username] = password
+            ### Save the updated user data to the file
             self.save_users(self.users)
             messagebox.showinfo("Registration Successful", "Account created for {}!".format(username))
             self.homePage()
