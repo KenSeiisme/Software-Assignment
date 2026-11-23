@@ -233,7 +233,7 @@ class Recipe_Organizer_System:
 
         # Create a combobox for category selection
         categories_box = ttk.Combobox(input_frame, values=all_categories ,state="readonly", font=("Arial", 10))
-        categories_box.pack(anchor="w", pady=5)
+        categories_box.pack(anchor="w", pady=(0,10))
 
         # Define a function to handle category selection
         def category_select(event=None):
@@ -251,9 +251,9 @@ class Recipe_Organizer_System:
             command=self.search_recipe
         ).pack(side="left", anchor="n")
 
-        Button(input_frame, text="Create Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.create_recipe).pack(anchor="w", padx=10, pady=50)
-        Button(input_frame, text="Edit Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.edit_recipe).pack(anchor="w", padx=10, pady=50)
-        Button(input_frame, text="My Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.my_recipe).pack(anchor="w", padx=10, pady=50)
+        Button(input_frame, text="Create Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.create_recipe).pack(anchor="w", padx=10, pady=10)
+        Button(input_frame, text="Edit Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.edit_recipe).pack(anchor="w", padx=10, pady=10)
+        Button(input_frame, text="My Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.my_recipe).pack(anchor="w", padx=10, pady=10)
 
         # Create a canvas and scrollbar for scrolling through recipe cards
         recipe_area = Frame(content, bg=BG_COLOR, highlightthickness=0)
@@ -274,7 +274,7 @@ class Recipe_Organizer_System:
 
         card_frame.columnconfigure(0, weight=1)
         # size between card
-        for column in range(1, 4):
+        for column in range(3):
             card_frame.grid_columnconfigure(column, uniform="recipe")
 
         card_frame.bind(
@@ -367,8 +367,7 @@ class Recipe_Organizer_System:
             fg=FG_COLOR, 
             font=("Arial", 10, "bold"), 
             width=10, height=2, 
-            command=lambda: self.customize(recipe
-            )
+            command=lambda: self.customize(recipe)
         ).pack(pady=5)
 
         # frame3

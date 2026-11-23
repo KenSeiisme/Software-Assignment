@@ -191,7 +191,7 @@ recipes = [
         "category": "Chinese",
         "tags": ["home-style"],
         "ingredients": [
-            {"name": "Chicken mid-joints", "amount": "8–10", "unit": "pieces"},
+            {"name": "Chicken mid-joints", "amount": 8, "unit": "pieces"},
             {"name": "Coca-Cola", "amount": 330, "unit": "ml", "notes": "about 1 can"},
             {"name": "Light soy sauce", "amount": 2, "unit": "tbsp"},
             {"name": "Dark soy sauce", "amount": 0.5, "unit": "tbsp"},
@@ -419,7 +419,7 @@ recipes = [
         "tags": ["mocktail", "sparkling"],
         "ingredients": [
             {"name": "Lime", "amount": 0.5, "unit": "piece", "notes": "cut into chunks"},
-            {"name": "Fresh mint leaves", "amount": "10–15", "unit": "leaves"},
+            {"name": "Fresh mint leaves", "amount": 10, "unit": "leaves"},
             {"name": "White sugar or simple syrup", "amount": 1, "unit": "tbsp"},
             {"name": "Ice", "amount": None, "unit": "enough to fill the glass"},
             {"name": "Sparkling water or Sprite", "amount": None, "unit": "as needed"},
@@ -593,7 +593,7 @@ recipes = [
         "category": "Beverage",
         "tags": ["mocktail", "sparkling"],
         "ingredients": [
-            {"name": "Fresh passion fruit", "amount": "1–2", "unit": "pieces"},
+            {"name": "Fresh passion fruit", "amount": 1, "unit": "pieces"},
             {"name": "Yakult", "amount": 1, "unit": "bottle", "notes": "100 ml"},
             {"name": "Honey", "amount": 1, "unit": "tbsp"},
             {"name": "Unsweetened sparkling water", "amount": 150, "unit": "ml"},
@@ -614,7 +614,7 @@ recipes = [
             {"name": "Ripe banana", "amount": 1, "unit": "piece", "notes": "frozen and sliced works best"},
             {"name": "Milk", "amount": 200, "unit": "ml"},
             {"name": "Honey or condensed milk", "amount": 1, "unit": "tsp", "notes": "optional"},
-            {"name": "Ice cubes", "amount": "5–6", "unit": "cubes", "notes": "if using room-temperature banana"},
+            {"name": "Ice cubes", "amount": 5, "unit": "cubes", "notes": "if using room-temperature banana"},
         ],
         "steps": [
             "Combine the banana, milk, ice cubes, and honey or condensed milk in a blender.",
