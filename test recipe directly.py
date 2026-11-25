@@ -194,7 +194,7 @@ class Recipe_Organizer_System:
         operation_menu.add_command(label="Log out", command=self.homePage)
         operation_menu.add_command(label="Create Recipe", command=self.create_recipe)
         operation_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
-        operation_menu.add_command(label="My Recipes", command=self.my_recipe)
+        operation_menu.add_command(label="Profile", command=self.profile)
 
 
         ### Search frame
@@ -238,9 +238,7 @@ class Recipe_Organizer_System:
             command=self.search_recipe
         ).pack(side="left", anchor="n")
 
-        Button(input_frame, text="Create Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.create_recipe).pack(anchor="w", padx=10, pady=10)
-        Button(input_frame, text="Edit Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.edit_recipe).pack(anchor="w", padx=10, pady=10)
-        Button(input_frame, text="My Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.my_recipe).pack(anchor="w", padx=10, pady=10)
+        Button(input_frame, text="Profile", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.profile).pack(anchor="w", padx=10, pady=80)
 
         # Create a canvas and scrollbar for scrolling through recipe cards
         recipe_area = Frame(content, bg=BG_COLOR, highlightthickness=0)
@@ -486,7 +484,7 @@ class Recipe_Organizer_System:
         self.display_Recipes(search_results)
 
 #######################################################################################################################################        
-    def my_recipe(self):
+    def profile(self):
         for widget in self.window.winfo_children():
             widget.destroy()
         self.window.title("My Recipes")
@@ -503,15 +501,11 @@ class Recipe_Organizer_System:
         Label(profile, text=user_text, font=("Arial", 14, "bold"), bg = BG_COLOR, fg = FG_COLOR).pack(anchor="w", pady=(10, 5))
 
    
-
-        
-
     def save_customized_recipe(self, recipe):
         # Here you can add code to save the customized recipe to a file or database
         messagebox.showinfo("Save Recipe", f"Customized recipe '{recipe['name']}' saved to My Recipes!")
         self.my_recipes(recipe)
 
-    
     
     def create_recipe(self):
         for widget in self.window.winfo_children():
