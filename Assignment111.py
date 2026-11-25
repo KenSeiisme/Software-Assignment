@@ -14,7 +14,7 @@ class Recipe_Organizer_System:
         # Create the main window
         self.window = Tk()
         # Set the window size
-        self.window.geometry("1200x744")
+        self.window.geometry("1500x844")
         self.window.config(bg=BG_COLOR)
 
         menubar = Menu(self.window)
@@ -29,10 +29,10 @@ class Recipe_Organizer_System:
         self.current_user = None
 
         self.window.title("Home")
-        title = Label(self.window, text="Kiyo Recipe Organizer", font=("CourierNew", 20, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR)
-        bR = Button(self.window, width=10, height=2, bg=BTN_COLOR, fg=FG_COLOR, text="Register", command=self.register)
-        bS = Button(self.window, width=10, height=2, bg=BTN_COLOR, fg=FG_COLOR, text="Sign in", command=self.login)
-        title.pack(pady=(45, 5))
+        title = Label(self.window, text="Kiyo Recipe Organizer", font=("CourierNew", 25, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR)
+        bR = Button(self.window, width=10, height=2, bg=BTN_COLOR, fg=FG_COLOR, text="Register", font=("Arial", 10,"bold"), command=self.register)
+        bS = Button(self.window, width=10, height=2, bg=BTN_COLOR, fg=FG_COLOR, text="Sign in",font=("Arial", 10,"bold"), command=self.login)
+        title.pack(pady=(100, 20))
 
         logo_image = PhotoImage(file = "Kiyo.png")
         canvas = Canvas(self.window, bg=BG_COLOR, highlightthickness=0)
@@ -51,10 +51,10 @@ class Recipe_Organizer_System:
 
 
         self.window.title("Home")
-        title = Label(self.window, text="Kiyo Recipe Organizer", font=("CourierNew", 20, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR)
-        bR = Button(self.window, width=10, height=2, bg=BTN_COLOR, fg=FG_COLOR, text="Register", command=self.register)
-        bS = Button(self.window, width=10, height=2, bg=BTN_COLOR, fg=FG_COLOR, text="Sign in", command=self.login)
-        title.pack(pady=(45, 5))
+        title = Label(self.window, text="Kiyo Recipe Organizer", font=("CourierNew", 25, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR)
+        bR = Button(self.window, width=10, height=2, bg=BTN_COLOR, fg=FG_COLOR, text="Register", font=("Arial", 10,"bold"), command=self.register)
+        bS = Button(self.window, width=10, height=2, bg=BTN_COLOR, fg=FG_COLOR, text="Sign in", font=("Arial", 10,"bold"), command=self.login)
+        title.pack(pady=(100, 20))
                 
         self.logo_image = PhotoImage(file = "Kiyo.png")
         canvas = Canvas(self.window, bg=BG_COLOR, highlightthickness=0)
@@ -116,18 +116,18 @@ class Recipe_Organizer_System:
             widget.destroy()
 
         self.window.title("Registration Center")
-        self.window.geometry("1200x744")
+        self.window.geometry("1500x844")
 
 
-        Label(self.window, text="Welcome!",font=("Times New Roman", 20, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR).pack(pady=20)
-        Label(self.window, text="Username", bg=BG_COLOR, fg=FG_COLOR).pack()
-        self.username_entry = Entry(self.window)
+        Label(self.window, text="Welcome!",font=("Times New Roman", 60, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR).pack(pady=(80,50))
+        Label(self.window, text="Username", font=20, bg=BG_COLOR, fg=FG_COLOR).pack()
+        self.username_entry = Entry(self.window, font=20)
         self.username_entry.pack()
 
-        Label(self.window, text="Password", bg=BG_COLOR, fg=FG_COLOR).pack(pady=(20, 0))
-        self.password_entry = Entry(self.window)
+        Label(self.window, text="Password", font=20, bg=BG_COLOR, fg=FG_COLOR).pack(pady=(20, 0))
+        self.password_entry = Entry(self.window, font=20)
         self.password_entry.pack()
-        Label(self.window, text="Password at least 5 characters", fg="grey", font=("Times New Roman", 8, "italic"), bg=BG_COLOR).pack()
+        Label(self.window, text="Password at least 5 characters", fg="grey", font=("Times New Roman", 10, "italic"), bg=BG_COLOR).pack()
 
         # Frame to hold the confirm and back button
         self.register_frame = Frame(self.window , bg=BG_COLOR, highlightthickness=0)
@@ -157,16 +157,16 @@ class Recipe_Organizer_System:
             widget.destroy()
 
         self.window.title("Login Center")
-        self.window.geometry("1200x744")
+        self.window.geometry("1500x844")
 
 
-        Label(self.window, text="Welcome back!", font=("Times New Roman", 20, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR).pack(pady=20)
-        Label(self.window, text="Username", bg=BG_COLOR, fg=FG_COLOR).pack()
-        self.username_entry = Entry(self.window)
+        Label(self.window, text="Welcome back!", font=("Times New Roman", 60, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR).pack(pady=(80,50))
+        Label(self.window, text="Username", font=20, bg=BG_COLOR, fg=FG_COLOR).pack()
+        self.username_entry = Entry(self.window, font=20)
         self.username_entry.pack()
 
-        Label(self.window, text="Password", bg=BG_COLOR, fg=FG_COLOR).pack(pady=(20, 0))
-        self.password_entry = Entry(self.window)
+        Label(self.window, text="Password", font=20, bg=BG_COLOR, fg=FG_COLOR).pack(pady=(20, 0))
+        self.password_entry = Entry(self.window, font=20)
         self.password_entry.pack()
 
         # Frame to hold the confirm and back button
@@ -298,10 +298,10 @@ class Recipe_Organizer_System:
         self.recipe_images = []
 
         for i, recipe in enumerate(recipe_list):
-            row, col = divmod(i, 3)
+            row, col = divmod(i, 5)
 
             card = Frame(self.card_frame)
-            card.grid(row=row, column=col + 1, padx=10, pady=10)
+            card.grid(row=row, column=col + 1, padx=(0,5), pady=10)
 
             image_path = self.project_folder / recipe["image"]
             photo = PhotoImage(file=str(image_path))
@@ -310,14 +310,28 @@ class Recipe_Organizer_System:
             Button(
                 card,
                 image=photo,
-                text=recipe["name"],
-                font=("Arial", 15, "bold"),
-                compound="top",
                 bg=BTN_COLOR,
                 fg=FG_COLOR,
                 command=lambda r=recipe: self.show_details(r)
             ).pack()
 
+            name = recipe["name"]
+            if len(name) > 19:
+                name = name[:18] + "..."
+            else:
+                name = name.strip()
+
+            Label(
+                card,
+                text=name,
+                font=("Arial", 13, "bold"),
+                compound="top",
+                justify='center',
+                anchor='center',
+                bg=BTN_COLOR,
+                fg=FG_COLOR,
+            ).pack(fill="both", expand=True)
+            
     def show_details(self, recipe):
         for widget in self.window.winfo_children():
             widget.destroy()

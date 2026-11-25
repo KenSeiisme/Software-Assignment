@@ -5,13 +5,17 @@ from recipe import recipes
 from tkinter import PhotoImage
 from tkinter import Canvas, Scrollbar
 from tkinter import ttk
+BG_COLOR = "#fef2d8"
+FG_COLOR = "#2e3444"
+BTN_COLOR = "#de774c"
+
     
 class Recipe_Organizer_System:
     def __init__(self):
         # Create the main window
         self.window = Tk()
         # Set the window size
-        self.window.geometry("1200x744")
+        self.window.geometry("1500x844")
 
         menubar = Menu(self.window)
         self.window.config(menu=menubar)
@@ -107,18 +111,18 @@ class Recipe_Organizer_System:
             widget.destroy()
 
         self.window.title("Registration Center")
-        self.window.geometry("1200x744")
+        self.window.geometry("1500x844")
 
 
-        Label(self.window, text="Welcome!",font=("Times New Roman", 20, "bold", "italic")).pack(pady=20)
-        Label(self.window, text="Username").pack()
-        self.username_entry = Entry(self.window)
+        Label(self.window, text="Welcome!",font=("Times New Roman", 60, "bold", "italic")).pack(pady=(100,50))
+        Label(self.window, text="Username",font=20).pack()
+        self.username_entry = Entry(self.window, font=20)
         self.username_entry.pack()
 
-        Label(self.window, text="Password").pack(pady=(20, 0))
-        self.password_entry = Entry(self.window)
+        Label(self.window, text="Password", font=20).pack(pady=(25, 0))
+        self.password_entry = Entry(self.window, font=20)
         self.password_entry.pack()
-        Label(self.window, text="Password at least 5 characters", fg="grey", font=("Times New Roman", 8, "italic")).pack()
+        Label(self.window, text="Password at least 5 characters", fg="grey", font=("Times New Roman", 10, "italic")).pack()
 
         # Frame to hold the confirm and back button
         self.register_frame = Frame(self.window)
@@ -136,16 +140,16 @@ class Recipe_Organizer_System:
             widget.destroy()
 
         self.window.title("Login Center")
-        self.window.geometry("1200x744")
+        self.window.geometry("1500x844")
 
 
-        Label(self.window, text="Welcome back!", font=("Times New Roman", 20, "bold", "italic")).pack(pady=20)
-        Label(self.window, text="Username").pack()
-        self.username_entry = Entry(self.window)
+        Label(self.window, text="Welcome back!", font=("Times New Roman", 60, "bold", "italic")).pack(pady=(100,50))
+        Label(self.window, text="Username", font=20).pack()
+        self.username_entry = Entry(self.window, font=20)
         self.username_entry.pack()
 
-        Label(self.window, text="Password").pack(pady=(20, 0))
-        self.password_entry = Entry(self.window)
+        Label(self.window, text="Password", font=20).pack(pady=(20, 0))
+        self.password_entry = Entry(self.window, font=20)
         self.password_entry.pack()
 
          # Frame to hold the confirm and back button
@@ -170,36 +174,62 @@ class Recipe_Organizer_System:
 
         self.window.title("Kiyo Recipe Organizer")
 
-        Label(self.window, text="Kiyo Recipe", font=("Times New Roman", 50, "bold", "italic")).pack(pady=10)
+        # Create a top bar with logo and title
+        top_bar = Frame(self.window, bg=BG_COLOR, highlightthickness=0)
+        top_bar.pack(side="top", fill="x")
+
+        self.logo_image = PhotoImage(file = "Kiyo.png")
+        canvas = Canvas(top_bar, bg=BG_COLOR, highlightthickness=0, width=self.logo_image.width(), height=self.logo_image.height())
+        canvas.create_image(0, 0, anchor="nw", image=self.logo_image)
+        canvas.pack(side="left", padx=20, pady=20) 
+        
+        Label(top_bar, text="Kiyo Recipe", font=("Times New Roman", 50, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR).place(relx=0.5, rely=0.5, anchor="center")
+
+        Label(self.window, text="Let's Taste!", font=("Times New Roman", 25, "bold"), fg="#d56942", bg=BG_COLOR).pack(side="top", pady=(0,10))
 
         menubar = Menu(self.window)
         self.window.config(menu=menubar)
-
-        operation_menu = Menu(menubar, tearoff=0)
+        operation_menu = Menu(menubar, tearoff=0, bg=BG_COLOR, fg=FG_COLOR, bd=0, activebackground=BTN_COLOR, activeforeground=FG_COLOR)
         menubar.add_cascade(label="Operations", menu=operation_menu)
         operation_menu.add_command(label="Log out", command=self.homePage)
         operation_menu.add_command(label="Create Recipe", command=self.create_recipe)
         operation_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
-        operation_menu.add_command(label="My Recipe", command=self.my_recipe)
+        operation_menu.add_command(label="My Recipes", command=self.my_recipe)
 
 
-        Label(self.window, text="Let's Taste!", font=("Times New Roman", 25, "bold"), fg="green").pack(pady=10)
-
-        # search frame
-        content = Frame(self.window)
+        ### Search frame
+        content = Frame(self.window, bg=BG_COLOR, highlightthickness=0)
         content.pack(fill="both", expand=True)
 
-        search_frame = Frame(content)
+        search_frame = Frame(content, bg=BG_COLOR, highlightthickness=0)
         search_frame.pack(side="left", anchor="n", padx=10, pady=10)
-        Label(search_frame, text="Search", font=("Arial", 12, "bold")).pack(side="left", anchor="n", padx=(0, 4))
+        Label(search_frame, text="Search", font=("Arial", 12, "bold"), bg=BG_COLOR, fg=FG_COLOR).pack(side="left", anchor="n", padx=(0, 4))
 
-        input_frame = Frame(search_frame)
+        input_frame = Frame(search_frame, bg=BG_COLOR, highlightthickness=0)
         input_frame.pack(side="left", anchor="n", padx=10)
 
         self.search_entry = Entry(input_frame, width=30, font=("Arial", 12))
         self.search_entry.pack(anchor="w")
 
-        Label(input_frame, text="Search name/category/tags", fg="gray", font=("Arial", 10, "italic")).pack(anchor="w", pady=(5, 0))
+        Label(input_frame, text="Search name/category/tags", fg="gray", font=("Arial", 10, "italic"), bg=BG_COLOR).pack(anchor="w", pady=(5, 0))
+
+        # Get all unique categories from the recipes
+        all_categories = sorted({
+            r["category"] for r in recipes if r.get("category")
+        })    
+
+        # Create a combobox for category selection
+        categories_box = ttk.Combobox(input_frame, values=all_categories ,state="readonly", font=("Arial", 10))
+        categories_box.pack(anchor="w", pady=(0,10))
+
+        # Define a function to handle category selection
+        def category_select(event=None):
+            value = categories_box.get()
+            self.search_entry.delete(0, END)
+            self.search_entry.insert(0, value)
+            self.search_recipe()
+
+        categories_box.bind("<<ComboboxSelected>>", category_select)
 
         Button(
             search_frame,
@@ -208,14 +238,15 @@ class Recipe_Organizer_System:
             command=self.search_recipe
         ).pack(side="left", anchor="n")
 
-        Button(input_frame, text="Create Recipe", width=15, height=2, bg="black", fg="white", font=("Arial", 13), command=self.create_recipe).pack(anchor="w", padx=10, pady=50)
-        Button(input_frame, text="Edit Recipe", width=15, height=2, bg="black", fg="white", font=("Arial", 13), command=self.edit_recipe).pack(anchor="w", padx=10, pady=50)
-        Button(input_frame, text="My Recipe", width=15, height=2, bg="black", fg="white", font=("Arial", 13), command=self.my_recipe).pack(anchor="w", padx=10, pady=50)
+        Button(input_frame, text="Create Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.create_recipe).pack(anchor="w", padx=10, pady=10)
+        Button(input_frame, text="Edit Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.edit_recipe).pack(anchor="w", padx=10, pady=10)
+        Button(input_frame, text="My Recipe", width=15, height=2, bg=BTN_COLOR, fg=FG_COLOR, font=("Arial", 13), command=self.my_recipe).pack(anchor="w", padx=10, pady=10)
 
         # Create a canvas and scrollbar for scrolling through recipe cards
-        recipe_area = Frame(content)
+        recipe_area = Frame(content, bg=BG_COLOR, highlightthickness=0)
         recipe_area.pack(side="right", fill="both", expand=True)
-        canvas = Canvas(recipe_area)
+
+        canvas = Canvas(recipe_area, bg=BG_COLOR, highlightthickness=0)
         vbar = Scrollbar(recipe_area, orient="vertical", command=canvas.yview)
         canvas.configure(yscrollcommand=vbar.set)
 
@@ -223,14 +254,14 @@ class Recipe_Organizer_System:
         canvas.pack(side="right", fill="both", expand=True)
 
         # Create a frame to hold the recipe cards
-        card_frame = Frame(canvas)
+        card_frame = Frame(canvas, bg=BG_COLOR, highlightthickness=0)
         canvas_window = canvas.create_window((0, 0), window=card_frame, anchor="nw")
 
         canvas.bind("<Configure>", lambda e: canvas.itemconfig(canvas_window, width=e.width))
 
         card_frame.columnconfigure(0, weight=1)
-
-        for column in range(1, 4):
+        # size between card
+        for column in range(3):
             card_frame.grid_columnconfigure(column, uniform="recipe")
 
         card_frame.bind(
@@ -246,17 +277,18 @@ class Recipe_Organizer_System:
         self.card_frame = card_frame
         self.display_Recipes(recipes)
 
-    # IMPORTANT loop to search and display
+    #$$$$$$ IMPORTANT loop to search and display
     def display_Recipes(self, recipe_list):
         for widget in self.card_frame.winfo_children():
             widget.destroy()
+
         self.recipe_images = []
-        
+
         for i, recipe in enumerate(recipe_list):
-            row, col = divmod(i, 3)
+            row, col = divmod(i, 5)
 
             card = Frame(self.card_frame)
-            card.grid(row=row, column=col + 1, pady=10, padx=4)
+            card.grid(row=row, column=col + 1, padx=(0,5), pady=10)
 
             image_path = self.project_folder / recipe["image"]
             photo = PhotoImage(file=str(image_path))
@@ -265,20 +297,36 @@ class Recipe_Organizer_System:
             Button(
                 card,
                 image=photo,
-                text=recipe["name"],
-                font=("Arial", 15, "bold"),
-                compound="top",
+                bg=BTN_COLOR,
+                fg=FG_COLOR,
                 command=lambda r=recipe: self.show_details(r)
+            ).pack()
+
+            name = recipe["name"]
+            if len(name) > 19:
+                name = name[:18] + "..."
+            else:
+                name = name.strip()
+
+            Label(
+                card,
+                text=name,
+                font=("Arial", 13, "bold"),
+                compound="top",
+                justify='center',
+                anchor='center',
+                bg=BTN_COLOR,
+                fg=FG_COLOR,
             ).pack()
 
     def show_details(self, recipe):
         for widget in self.window.winfo_children():
             widget.destroy()
         self.window.title(recipe["name"])
-        Button(self.window, text="Back", width=10, height=2, command=self.Recipe_Page).pack(anchor="nw", padx=10, pady=10)
+        Button(self.window, text="Back", width=10, height=2, bg=BTN_COLOR, fg=FG_COLOR, command=self.Recipe_Page).pack(anchor="nw", padx=10, pady=10)
 
         # Scroll(frame1)
-        canvas = Canvas(self.window)
+        canvas = Canvas(self.window , bg=BG_COLOR, highlightthickness=0)
         vbar = Scrollbar(self.window, orient="vertical", command=canvas.yview)
         canvas.configure(yscrollcommand=vbar.set)
 
@@ -286,7 +334,7 @@ class Recipe_Organizer_System:
         canvas.pack(side="left", fill="both", expand=True)
 
         # Create a frame to hold the recipe details
-        self.page_frame = Frame(canvas)
+        self.page_frame = Frame(canvas, bg=BG_COLOR, highlightthickness=0)
         canvas_window = canvas.create_window((0, 0), window=self.page_frame, anchor="nw")
 
         canvas.bind("<Configure>", lambda e: canvas.itemconfig(canvas_window, width=e.width))
@@ -301,36 +349,35 @@ class Recipe_Organizer_System:
         )
 
         ### frame2
-        self.Title_frame = Frame(self.page_frame)
+        self.Title_frame = Frame(self.page_frame, bg=BG_COLOR, highlightthickness=0)
         self.Title_frame.pack()
-        title_frame = Frame(self.Title_frame)
+        title_frame = Frame(self.Title_frame, bg=BG_COLOR, highlightthickness=0)
         title_frame.pack()
 
-        Label(title_frame, text=recipe['name'], font=("Times New Roman", 35, "bold", "italic")).pack(pady=15)
-
+        Label(title_frame, text=recipe['name'], font=("Times New Roman", 35, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR).pack(pady=15)
+        
         # photo
         self.project_folder = Path(__file__).resolve().parent
         image_path = self.project_folder / recipe["image"]
         self.photo = PhotoImage(file=str(image_path))
         Label(title_frame, image=self.photo).pack(pady=5)
-        Label(title_frame, text='Category: ' + recipe['category'], fg="purple", font=("Times New Roman", 13, "italic")).pack(pady=10)
+        Label(title_frame, text='Category: ' + recipe['category'], bg=BG_COLOR, fg="#d56942", font=("Times New Roman", 13, "bold")).pack(pady=10)
         Button(title_frame, 
             text="Customize", 
-            bg="pink", 
+            bg=BTN_COLOR, 
+            fg=FG_COLOR, 
             font=("Arial", 10, "bold"), 
             width=10, height=2, 
-            command=lambda: self.customize(recipe
-            )
+            command=lambda: self.customize(recipe)
         ).pack(pady=5)
 
-
         # frame3
-        self.details_frame = Frame(self.page_frame)
+        self.details_frame = Frame(self.page_frame, bg=BG_COLOR, highlightthickness=0)
         self.details_frame.pack()
-        ing_frame = Frame(self.details_frame)
+        ing_frame = Frame(self.details_frame, bg=BG_COLOR, highlightthickness=0)
         ing_frame.pack(anchor="w", pady=20)
         #show ingredients
-        Label(ing_frame, text="Ingredients:", font=("CourierNew", 20, "bold", "italic")).pack(anchor="w")
+        Label(ing_frame, text="Ingredients:", font=("CourierNew", 20, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR).pack(anchor="w")
 
         for item in recipe["ingredients"]:
             ingredient_text = (
@@ -338,26 +385,26 @@ class Recipe_Organizer_System:
             f'{item["amount"] if item["amount"] is not None else ""} '
             f'{item["unit"]}'
         )
-            Label(ing_frame, text=ingredient_text, font=("Arial", 13)).pack(side="top", anchor="w", pady=2)
+            Label(ing_frame, text=ingredient_text, font=("Arial", 13), bg=BG_COLOR, fg=FG_COLOR).pack(side="top", anchor="w", pady=2)
 
-        ins_frame = Frame(self.details_frame)
+        ins_frame = Frame(self.details_frame, bg=BG_COLOR, highlightthickness=0)
         ins_frame.pack(pady=25)
         #show instructions
-        Label(ins_frame, text="Instructions:", font=("CourierNew", 20, "bold", "italic")).pack()
+        Label(ins_frame, text="Instructions:", font=("CourierNew", 20, "bold", "italic"), bg=BG_COLOR, fg=FG_COLOR).pack()
         # for loop
         for i, step in enumerate(recipe["steps"], start=1):
-            Label(ins_frame, text=f"{i}. {step}", wraplength=3000, font=("Arial", 13)).pack(anchor="w", pady=5)
+            Label(ins_frame, text=f"{i}. {step}", wraplength=1000, font=("Arial", 13), bg=BG_COLOR, fg=FG_COLOR).pack(anchor="w", pady=5)
 
     def customize(self, recipe):
         self.c_window = Toplevel()
         self.c_window.title("Customize Recipe")
         self.c_window.geometry("550x500")
-        self.c_window.config(menu=Menu(self.c_window))   
+        self.c_window.config(menu=Menu(self.c_window), bg=BG_COLOR)   
 
-        Label(self.c_window, text=f"Customize: {recipe['name']}",
+        Label(self.c_window, text=f"Customize: {recipe['name']}", bg=BG_COLOR, fg=FG_COLOR,
             font=("Times New Roman", 20, "bold")).pack(pady=10)
 
-        Label(self.c_window, text="Select an ingredient:", font=("Arial", 10)).pack(pady=(15,0))
+        Label(self.c_window, text="Select an ingredient:", font=("Arial", 10), bg=BG_COLOR, fg=FG_COLOR).pack(pady=(15,0))
         
         ingredient_text = [
             item["name"]
@@ -368,16 +415,18 @@ class Recipe_Organizer_System:
         ingredient_box = ttk.Combobox(self.c_window, values=ingredient_text ,state="readonly", font=("Arial", 10))
         ingredient_box.pack()
 
-        Label(self.c_window, text="Enter amount you have:", font=("Arial", 10)).pack(pady=(25,0))
+        Label(self.c_window, text="Enter amount you have:", font=("Arial", 10), bg=BG_COLOR, fg=FG_COLOR).pack(pady=(25,0))
         amount_entry = Entry(self.c_window, font=("Arial", 10))
         amount_entry.pack()
 
-        self.result_frame = Frame(self.c_window)
+        self.result_frame = Frame(self.c_window, bg=BG_COLOR, highlightthickness=0)
         self.result_frame.pack()
 
         Button(
             self.c_window, 
             text="Calculate",
+            bg=BTN_COLOR,
+            fg=FG_COLOR,
             width=8,
             height=2,
             command=lambda: self.calculate_cuztomize(recipe, ingredient_box, amount_entry, self.result_frame
@@ -414,15 +463,12 @@ class Recipe_Organizer_System:
         for widget in self.result_frame.winfo_children():
             widget.destroy()
 
-        Label(self.result_frame, text="Customized Ingredients:", fg="blue", font=("CourierNew", 14, "bold", "italic")).pack(pady=(30,5))
+        Label(self.result_frame, text="Customized Ingredients:", bg=BG_COLOR, fg="#d56942", font=("CourierNew", 14, "bold", "italic")).pack(pady=(30,5))
         for item in recipe["ingredients"]:
             if item["amount"] is not None:
                 new_amount = item["amount"] * ratio
 
-                Label(result_frame,
-                    text=f'{item["name"]}: {new_amount:.2f} {item["unit"]}',
-                    font=("Arial", 12)
-                ).pack(anchor="w")
+                Label(result_frame, bg=BG_COLOR, fg=FG_COLOR, text=f'{item["name"]}: {new_amount:.2f} {item["unit"]}',font=("Arial", 12)).pack(anchor="w")
 
     def search_recipe(self):
         search_text = self.search_entry.get().strip().lower()
@@ -439,117 +485,117 @@ class Recipe_Organizer_System:
 
         self.display_Recipes(search_results)
 
-###############################################################################################################################
-    def my_recipe(self, recipe):
+#######################################################################################################################################        
+    def my_recipe(self):
         for widget in self.window.winfo_children():
             widget.destroy()
         self.window.title("My Recipes")
-        Label(self.window, text="My Recipes", font=("Times New Roman", 30, "bold", "italic")).pack(pady=10)
-        # Get the recipe details from the entry fields
-        recipe_name = recipe['name']
-        ingredients = recipe['ingredients']
-        instructions = recipe['steps']
-    
-        # Here you can add code to save the recipe details to a file or database
-        print(f"Recipe Name: {recipe_name}")
-        print(f"Ingredients: {ingredients}")
-        print(f"Instructions: {instructions}")
+        Label(self.window, text="My Recipes", bg=BG_COLOR, fg=FG_COLOR, font=("Times New Roman", 30, "bold", "italic")).pack(pady=10)
+
+        Button(self.window, text="Back", bg=BTN_COLOR, fg=FG_COLOR, width=10, height=2, command=self.Recipe_Page).pack(anchor="nw", padx=10, pady=10)
 
 
-        Button(self.window, text="Back", width=10, height=2, command=self.Recipe_Page).pack(anchor="nw", padx=10, pady=10)
+        profile = Frame(self.window, bg = BG_COLOR)
+        profile.pack(anchor="w", pady=(10, 5))
+
+        #show user details
+        user_text = f"Username: {self.current_user}"
+        Label(profile, text=user_text, font=("Arial", 14, "bold"), bg = BG_COLOR, fg = FG_COLOR).pack(anchor="w", pady=(10, 5))
+
+   
+
+        
 
     def save_customized_recipe(self, recipe):
         # Here you can add code to save the customized recipe to a file or database
         messagebox.showinfo("Save Recipe", f"Customized recipe '{recipe['name']}' saved to My Recipes!")
         self.my_recipes(recipe)
 
+    
+    
     def create_recipe(self):
-            for widget in self.window.winfo_children():
-                widget.destroy()
-            # Create a new window for recipe creation
-            self.window.title("Create Recipe")
+        for widget in self.window.winfo_children():
+            widget.destroy()
+        # Create a new window for recipe creation
+        self.window.title("Create Recipe")
+    
+        # Create labels and entry fields for recipe details
+        Label(self.window, text="Recipe Name:", bg=BG_COLOR, fg=FG_COLOR).grid(row=1, column=0)
+        self.recipe_name_entry = Text(self.window, width=100, height=1)
+        self.recipe_name_entry.grid(row=1, column=1, pady=5)
+    
+        Label(self.window, text="Ingredients:", bg=BG_COLOR, fg=FG_COLOR).grid(row=2, column=0)
+        self.ingredients_entry = Text(self.window, width=100, height=8)
+        self.ingredients_entry.grid(row=2, column=1, pady=5)
+    
+        Label(self.window, text="Instructions:", bg=BG_COLOR, fg=FG_COLOR).grid(row=3, column=0)
+        self.instructions_entry = Text(self.window, width=100, height=8)
+        self.instructions_entry.grid(row=3, column=1, pady=5)
+    
+        # Create a frame to hold the save button
+        self.save_frame = Frame(self.window, bg=BG_COLOR, highlightthickness=0)
+        self.save_frame.grid(row=4, column=1, pady=10)
         
-            # Create labels and entry fields for recipe details
-            Label(self.window, text="Recipe Name:").grid(row=1, column=0)
-            self.recipe_name_entry = Text(self.window, width=100, height=1)
-            self.recipe_name_entry.grid(row=1, column=1, pady=5)
-        
-            Label(self.window, text="Ingredients:").grid(row=2, column=0)
-            self.ingredients_entry = Text(self.window, width=100, height=8)
-            self.ingredients_entry.grid(row=2, column=1, pady=5)
-        
-            Label(self.window, text="Instructions:").grid(row=3, column=0)
-            self.instructions_entry = Text(self.window, width=100, height=8)
-            self.instructions_entry.grid(row=3, column=1, pady=5)
-        
-            # Create a frame to hold the save button
-            self.save_frame = Frame(self.window)
-            self.save_frame.grid(row=4, column=1, pady=10)
-            
-            button_frame = Frame(self.save_frame)
-            button_frame.pack()
-        
-            back_button = Button(button_frame, text="Back", width=10, height=2, command=self.Recipe_Page)
-            back_button.pack(side="left", padx=5)
-            save_button = Button(button_frame, text="Save Recipe", width=10, height=2, command=self.save_recipe)
-            save_button.pack(side="left", padx=5)
+        button_frame = Frame(self.save_frame, bg=BG_COLOR, highlightthickness=0)
+        button_frame.pack(pady=10)
+    
+        back_button = Button(button_frame, text="Back", bg=BTN_COLOR, fg=FG_COLOR, width=10, height=2, command=self.Recipe_Page)
+        back_button.pack(side="left", padx=5)
+        save_button = Button(button_frame, text="Save Recipe", bg=BTN_COLOR, fg=FG_COLOR, width=10, height=2, command=self.save_recipe)
+        save_button.pack(side="left", padx=5)
 
     def save_recipe(self):
-            # Get the recipe details from the entry fields
-            recipe_name = self.recipe_name_entry.get()
-            ingredients = self.ingredients_entry.get()
-            instructions = self.instructions_entry.get()
-        
-            # Here you can add code to save the recipe details to a file or database
-            print(f"Recipe Name: {recipe_name}")
-            print(f"Ingredients: {ingredients}")
-            print(f"Instructions: {instructions}")
-        
+        # Get the recipe details from the entry fields
+        recipe_name = self.recipe_name_entry.get().strip()
+        ingredients = self.ingredients_entry.get().strip()
+        instructions = self.instructions_entry.get().strip()
+    
+        # Here you can add code to save the recipe details to a file or database
+        print(f"Recipe Name: {recipe_name}")
+        print(f"Ingredients: {ingredients}")
+        print(f"Instructions: {instructions}")
+    
     def edit_recipe(self):
         for widget in self.window.winfo_children():
             widget.destroy()
         # Create a new window for recipe editing
         self.window.title("Edit Recipe")
 
-        Label(self.window, text="Recipe Name:").grid(row=1, column=0)
+        Label(self.window, text="Recipe Name:", bg=BG_COLOR, fg=FG_COLOR).grid(row=1, column=0)
         self.recipe_name_entry = Text(self.window, width=100, height=1)
         self.recipe_name_entry.grid(row=1, column=1, pady=5)
             
-        Label(self.window, text="Ingredients:").grid(row=2, column=0)
+        Label(self.window, text="Ingredients:", bg=BG_COLOR, fg=FG_COLOR).grid(row=2, column=0)
         self.ingredients_entry = Text(self.window, width=100, height=8)
         self.ingredients_entry.grid(row=2, column=1, pady=5)
             
-        Label(self.window, text="Instructions:").grid(row=3, column=0)
+        Label(self.window, text="Instructions:", bg=BG_COLOR, fg=FG_COLOR).grid(row=3, column=0)
         self.instructions_entry = Text(self.window, width=100, height=8)
         self.instructions_entry.grid(row=3, column=1, pady=5)
             
         # Create a frame to hold the save button
-        self.edit_frame = Frame(self.window)
-        self.edit_frame.grid(row=4, column=1, pady=10)
+        self.save_frame = Frame(self.window, bg=BG_COLOR, highlightthickness=0)
+        self.save_frame.grid(row=4, column=1, pady=10)
                 
-        button_frame = Frame(self.edit_frame)
+        button_frame = Frame(self.save_frame, bg=BG_COLOR, highlightthickness=0)
         button_frame.pack(pady=10)
             
-        back_button = Button(button_frame, text="Back", width=10, height=2, command=self.Recipe_Page)
+        back_button = Button(button_frame, text="Back", bg=BTN_COLOR, fg=FG_COLOR, width=10, height=2, command=self.Recipe_Page)
         back_button.pack(side="left", padx=5)
-        save_button = Button(button_frame, text="Save Changes", width=10, height=2, command=self.save_edited_recipe)
-        save_button.pack(side="left", padx=5)   
-          
+        save_button = Button(button_frame, text="Save Changes", bg=BTN_COLOR, fg=FG_COLOR, width=10, height=2, command=self.save_edited_recipe)
+        save_button.pack(side="left", padx=5)
 
     def save_edited_recipe(self):
-        # Get the edited recipe details from the entry fields
-        recipe_name = self.recipe_name_entry.get()
-        ingredients = self.ingredients_entry.get()
-        instructions = self.instructions_entry.get()
-    
-        # Here you can add code to save the edited recipe details to a file or database
-        print(f"Edited Recipe Name: {recipe_name}")
-        print(f"Edited Ingredients: {ingredients}")
-        print(f"Edited Instructions: {instructions}")   
+            # Get the edited recipe details from the entry fields
+            recipe_name = self.recipe_name_entry.get().strip()
+            ingredients = self.ingredients_entry.get().strip()
+            instructions = self.instructions_entry.get().strip()
+        
+            # Here you can add code to save the edited recipe details to a file or database
+            print(f"Edited Recipe Name: {recipe_name}")
+            print(f"Edited Ingredients: {ingredients}")
+            print(f"Edited Instructions: {instructions}")   
 
-
-
-    
 
 
 Recipe_Organizer_System()
