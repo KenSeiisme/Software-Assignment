@@ -1,7 +1,6 @@
 from pathlib import Path
 from tkinter import *
 from tkinter import Canvas, PhotoImage, Scrollbar, filedialog, messagebox, ttk
-
 from recipe import recipes
 
 BG_COLOR = "#fef2d8"
@@ -39,7 +38,10 @@ class Recipe_Organizer_System:
         self.users = self.load_users()
         self.current_user = None
 
-        self.my_recipe_data = []
+        ### Load custom recipes from a file
+        self.MY_RECIPE_FILE = Path(__file__).resolve().parent / "my_recipe.txt"
+        self.my_recipes = self.load_my_recipes()
+
         self.recipe_photo_images = []
 
         self.window.title("Home")
@@ -806,6 +808,38 @@ class Recipe_Organizer_System:
             command=self.my_Recipe,
         ).pack(padx=15, pady=30)
 
+    def save_my_recipes(self):
+        lines = []
+        for my_recipe in self.my_recipes:
+            # Replace '|' to protect delimiter and escape newlines so each recipe stays on 1 line
+            user = my_recipe["user"].replace("|", "/")
+            name = my_recipe["name"].replace("|", "/").replace("\n", "\\n")
+            ingredients = my_recipe["ingredients"].replace("|", "/").replace("\n", "\\n")
+            instructions = my_recipe["instructions"].replace("|", "/").replace("\n", "\\n")
+            image = my_recipe["image"].replace("|", "/")
+            lines.append(f"{user}|{name}|{ingredients}|{instructions}|{image}")
+
+        content = "\n".join(lines) + ("\n" if lines else "")
+        self.MY_RECIPE_FILE.write_text(content, encoding="utf-8")
+
+    def load_my_recipes(self):
+        loaded = []
+        if self.MY_RECIPE_FILE.exists():
+            lines = self.MY_RECIPE_FILE.read_text(encoding="utf-8").splitlines()
+            for line in lines:
+                parts = line.split("|")
+                if len(parts) == 5:
+                    loaded.append(
+                        {
+                            "user": parts[0],
+                            "name": parts[1].replace("\\n", "\n"),
+                            "ingredients": parts[2].replace("\\n", "\n"),
+                            "instructions": parts[3].replace("\\n", "\n"),
+                            "image": parts[4],
+                        }
+                    )
+        return loaded
+
     def my_Recipe(self):
         for widget in self.window.winfo_children():
             widget.destroy()
@@ -832,7 +866,9 @@ class Recipe_Organizer_System:
             command=self.create_recipe,
         ).pack(padx=10, pady=10)
 
-        if not self.my_recipe_data:
+        # Filter recipes belonging to the logged-in user
+        user_recipes = [user for user in self.my_recipes if user["user"] == self.current_user]
+        if not user_recipes:
             Label(
                 self.window,
                 text="0 recipes — Please create one :)",
@@ -843,10 +879,10 @@ class Recipe_Organizer_System:
 
         self.recipe_photo_images = []
 
-        for recipe in self.my_recipe_data:
+        for my_recipe in user_recipes:
             card = LabelFrame(
                 self.window,
-                text=recipe["name"],
+                text=my_recipe["name"],
                 bg=BG_COLOR,
                 fg=FG_COLOR,
                 padx=10,
@@ -856,7 +892,7 @@ class Recipe_Organizer_System:
 
             Label(
                 card,
-                text="Ingredients: " + recipe["ingredients"],
+                text="Ingredients: " + my_recipe["ingredients"],
                 bg=BG_COLOR,
                 fg=FG_COLOR,
                 wraplength=1000,
@@ -865,25 +901,46 @@ class Recipe_Organizer_System:
 
             Label(
                 card,
-                text="Instructions: " + recipe["instructions"],
+                text="Instructions: " + my_recipe["instructions"],
                 bg=BG_COLOR,
                 fg=FG_COLOR,
                 wraplength=1000,
                 justify="left",
             ).pack(anchor="w", pady=5)
 
-            if recipe["photo"]:
+            if my_recipe["image"]:
                 try:
-                    photo = PhotoImage(file=recipe["photo"])
+                    photo = PhotoImage(file=my_recipe["image"])
                     self.recipe_photo_images.append(photo)
                     Label(card, image=photo, bg=BG_COLOR).pack(anchor="w", pady=5)
                 except Exception:
                     Label(
                         card,
-                        text="Photo: " + Path(recipe["photo"]).name,
+                        text="Photo: " + Path(my_recipe["image"]).name,
                         bg=BG_COLOR,
                         fg=FG_COLOR,
                     ).pack(anchor="w")
+
+            action_frame = Frame(card, bg=BG_COLOR)
+            action_frame.pack(anchor="e", pady=(5, 0))
+
+            Button(
+                action_frame,
+                text="Edit",
+                bg=BTN_COLOR,
+                fg=FG_COLOR,
+                width=8,
+                command=lambda r=my_recipe: self.edit_recipe(r),
+            ).pack(side="left", padx=5)
+
+            Button(
+                action_frame,
+                text="Delete",
+                bg="#d9534f",
+                fg="white",
+                width=8,
+                command=lambda r=my_recipe: self.delete_recipe(r),
+            ).pack(side="left")
 
     def save_recipe(self):
         name = self.recipe_name_entry.get("1.0", "end").strip()
@@ -894,17 +951,38 @@ class Recipe_Organizer_System:
             messagebox.showerror("Missing details", "Details cannot be blank.")
             return
 
-        self.my_recipe_data.append(
+        self.my_recipes.append(
             {
+                "user": self.current_user,
                 "name": name,
                 "ingredients": ingredients,
                 "instructions": instructions,
-                "photo": self.recipe_photo_path,
+                "image": self.recipe_photo_path,
             }
         )
+        self.save_my_recipes()
 
         messagebox.showinfo("Saved", "You can view My Recipe to edit or delete.")
         self.my_Recipe()
+
+    def choose_recipe_photo(self):
+        path = filedialog.askopenfilename(
+            title="Choose a recipe photo",
+            filetypes=[("PNG or GIF images", "*.png *.gif")],
+        )
+
+        if path:
+            self.recipe_photo_path = path
+            self.photo_name_label.config(text=Path(path).name)
+
+            img = PhotoImage(file=path)
+            ## Rescale if size too large
+            if img.height() > 120:
+                scale = max(1, img.height() // 120)
+                img = img.subsample(scale, scale)
+
+            self.upload_photo = img
+            self.photo_preview_label.config(image=self.upload_photo)
 
     def create_recipe(self):
         for widget in self.window.winfo_children():
@@ -1005,26 +1083,18 @@ class Recipe_Organizer_System:
             command=lambda: self.save_recipe(),
         ).pack(side="left", padx=5)
 
-    def choose_recipe_photo(self):
-        path = filedialog.askopenfilename(
-            title="Choose a recipe photo",
-            filetypes=[("PNG or GIF images", "*.png *.gif")],
-        )
 
-        if path:
-            self.recipe_photo_path = path
-            self.photo_name_label.config(text=Path(path).name)
+    def edit_recipe(self, target_recipe=None):
+        user_recipes = [user for user in self.my_recipes if user["user"] == self.current_user]
+        if target_recipe is None:
+            if not user_recipes:
+                messagebox.showinfo("No Recipes", "You don't have any recipes to edit yet.")
+                self.my_Recipe()
+                return
+            target_recipe = user_recipes[0]
 
-            img = PhotoImage(file=path)
-            ## Rescale if size too large
-            if img.height() > 120:
-                scale = max(1, img.height() // 120)
-                img = img.subsample(scale, scale)
+        self.editing_recipe = target_recipe
 
-            self.upload_photo = img
-            self.photo_preview_label.config(image=self.upload_photo)
-
-    def edit_recipe(self):
         for widget in self.window.winfo_children():
             widget.destroy()
         # Create a new window for recipe editing
@@ -1080,6 +1150,12 @@ class Recipe_Organizer_System:
         print(f"Recipe Name: {recipe_name}")
         print(f"Ingredients: {ingredients}")
         print(f"Instructions: {instructions}")
+
+    def delete_recipe(self, target_recipe):
+        if messagebox.askyesno("Confirm Delete", f"Delete '{target_recipe['name']}'?"):
+            self.my_recipes.remove(target_recipe)
+            self.save_my_recipes()
+            self.my_Recipe()
 
     def save_edited_recipe(self):
         # Get the edited recipe details from the entry fields
