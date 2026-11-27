@@ -872,13 +872,41 @@ class Recipe_Organizer_System:
             command=self.create_recipe,
         ).pack(padx=10, pady=10)
 
+        list_area = Frame(self.window, bg=BG_COLOR, highlightthickness=0)
+        list_area.pack(fill="both", expand=True)
+
+        canvas = Canvas(list_area, bg=BG_COLOR, highlightthickness=0)
+        vbar = Scrollbar(list_area, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=vbar.set)
+
+        vbar.pack(side="right", fill="y")
+        canvas.pack(side="right", fill="both", expand=True)
+
+        scroll_frame = Frame(canvas, bg=BG_COLOR, highlightthickness=0)
+        canvas_window = canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
+
+        canvas.bind(
+            "<Configure>", lambda e: canvas.itemconfig(canvas_window, width=e.width)
+        )
+        scroll_frame.bind(
+            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        self.window.bind_all(
+            "<MouseWheel>",
+            lambda e: (
+                canvas.yview_scroll(int(-1 * (e.delta / 120)), "units")
+                if canvas.winfo_exists()
+                else None
+            ),
+        )
+
         # Filter recipes belonging to the logged-in user
         user_recipes = [
             user for user in self.my_recipes if user["user"] == self.current_user
         ]
         if not user_recipes:
             Label(
-                self.window,
+                scroll_frame,
                 text="0 recipes — Please create one :)",
                 bg=BG_COLOR,
                 fg=FG_COLOR,
@@ -890,7 +918,7 @@ class Recipe_Organizer_System:
         # Show recipe in user profile
         for my_recipe in user_recipes:
             card = LabelFrame(
-                self.window,
+                scroll_frame,
                 text=my_recipe["name"],
                 bg=BG_COLOR,
                 fg=FG_COLOR,
@@ -1125,56 +1153,115 @@ class Recipe_Organizer_System:
         # Create a new window for recipe editing
         self.window.title("Edit Recipe")
 
-        Label(self.window, text="Recipe Name:", bg=BG_COLOR, fg=FG_COLOR).grid(
-            row=1, column=0
-        )
-        self.recipe_name_entry = Text(self.window, width=100, height=1)
-        self.recipe_name_entry.grid(row=1, column=1, pady=5)
+        ###### Upload / Change Photo
+        Label(
+            self.window,
+            text="Recipe Photo:",
+            font=("Arial", 10, "bold"),
+            bg=BG_COLOR,
+            fg=FG_COLOR,
+        ).grid(row=1, column=0, sticky="w", padx=10, pady=5)
 
-        Label(self.window, text="Ingredients:", bg=BG_COLOR, fg=FG_COLOR).grid(
-            row=2, column=0
-        )
-        self.ingredients_entry = Text(self.window, width=100, height=8)
-        self.ingredients_entry.grid(row=2, column=1, pady=5)
+        photo_frame = Frame(self.window, bg=BG_COLOR)
+        photo_frame.grid(row=1, column=1, columnspan=2, sticky="w", padx=5, pady=5)
 
-        Label(self.window, text="Instructions:", bg=BG_COLOR, fg=FG_COLOR).grid(
-            row=3, column=0
-        )
-        self.instructions_entry = Text(self.window, width=100, height=8)
-        self.instructions_entry.grid(row=3, column=1, pady=5)
+        self.recipe_photo_path = target_recipe["image"]
+        self.upload_photo = None
 
-        # Create a frame to hold the save button
+        self.photo_preview_label = Label(photo_frame, bg=BG_COLOR)
+        self.photo_preview_label.pack(side="left", padx=(0, 10))
+
+        photo_text = (
+            Path(self.recipe_photo_path).name
+            if self.recipe_photo_path
+            else "No photo selected"
+        )
+        self.photo_name_label = Label(
+            photo_frame,
+            text=photo_text,
+            font=("Arial", 10, "bold"),
+            bg=BG_COLOR,
+            fg=FG_COLOR,
+        )
+        self.photo_name_label.pack(side="left", padx=(0, 10))
+
+        # Load existing photo preview from images/ folder
+        if self.recipe_photo_path:
+            try:
+                image_path = Path(__file__).resolve().parent / self.recipe_photo_path
+                image = PhotoImage(file=str(image_path))
+                self.upload_photo = image
+                self.photo_preview_label.config(image=self.upload_photo)
+            except Exception:
+                pass
+
+        Button(
+            photo_frame,
+            text="Choose Photo",
+            bg=BTN_COLOR,
+            fg=FG_COLOR,
+            command=self.choose_recipe_photo,
+        ).pack(side="left")
+
+        Label(
+            self.window,
+            text="Recipe Name:",
+            font=("Arial", 10, "bold"),
+            bg=BG_COLOR,
+            fg=FG_COLOR,
+        ).grid(row=2, column=0, sticky="w", padx=10, pady=5)
+        self.recipe_name_entry = Text(self.window, width=150, height=2)
+        self.recipe_name_entry.grid(row=2, column=1, sticky="w", pady=5)
+        self.recipe_name_entry.insert("1.0", target_recipe["name"])
+
+        Label(
+            self.window,
+            text="Ingredients:",
+            font=("Arial", 10, "bold"),
+            bg=BG_COLOR,
+            fg=FG_COLOR,
+        ).grid(row=3, column=0, sticky="nw", padx=10, pady=5)
+        self.ingredients_entry = Text(self.window, width=150, height=12)
+        self.ingredients_entry.grid(row=3, column=1, sticky="w", pady=5)
+        self.ingredients_entry.insert("1.0", target_recipe["ingredients"])
+
+        Label(
+            self.window,
+            text="Instructions:",
+            font=("Arial", 10, "bold"),
+            bg=BG_COLOR,
+            fg=FG_COLOR,
+        ).grid(row=4, column=0, sticky="nw", padx=10, pady=5)
+        self.instructions_entry = Text(self.window, width=150, height=12)
+        self.instructions_entry.grid(row=4, column=1, sticky="w", pady=5)
+        self.instructions_entry.insert("1.0", target_recipe["instructions"])
+
+        # Create a frame to hold Save & Back buttons
         self.save_frame = Frame(self.window, bg=BG_COLOR, highlightthickness=0)
-        self.save_frame.grid(row=4, column=1, pady=10)
+        self.save_frame.grid(row=5, column=1, columnspan=2, sticky="e", pady=10)
 
         button_frame = Frame(self.save_frame, bg=BG_COLOR, highlightthickness=0)
-        button_frame.pack(pady=10)
+        button_frame.grid(row=0, column=0, sticky="w")
 
-        back_button = Button(
+        Button(
             button_frame,
             text="Back",
             bg=BTN_COLOR,
             fg=FG_COLOR,
             width=10,
             height=2,
-            command=self.Recipe_Page,
-        )
-        back_button.pack(side="left", padx=5)
-        save_button = Button(
+            command=lambda: self.my_Recipe(),
+        ).pack(side="left", padx=5)
+
+        Button(
             button_frame,
-            text="Save Changes",
+            text="Save Recipe",
             bg=BTN_COLOR,
             fg=FG_COLOR,
             width=10,
             height=2,
-            command=self.save_edited_recipe,
-        )
-        save_button.pack(side="left", padx=5)
-
-        # Here you can add code to save the recipe details to a file or database
-        print(f"Recipe Name: {recipe_name}")
-        print(f"Ingredients: {ingredients}")
-        print(f"Instructions: {instructions}")
+            command=lambda: self.save_edited_recipe(),
+        ).pack(side="left", padx=5)
 
     def delete_recipe(self, target_recipe):
         if messagebox.askyesno("Confirm Delete", f"Delete '{target_recipe['name']}'?"):
@@ -1183,15 +1270,22 @@ class Recipe_Organizer_System:
             self.my_Recipe()
 
     def save_edited_recipe(self):
-        # Get the edited recipe details from the entry fields
-        recipe_name = self.recipe_name_entry.get().strip()
-        ingredients = self.ingredients_entry.get().strip()
-        instructions = self.instructions_entry.get().strip()
+        recipe_name = self.recipe_name_entry.get("1.0", "end").strip()
+        ingredients = self.ingredients_entry.get("1.0", "end").strip()
+        instructions = self.instructions_entry.get("1.0", "end").strip()
 
-        # Here you can add code to save the edited recipe details to a file or database
-        print(f"Edited Recipe Name: {recipe_name}")
-        print(f"Edited Ingredients: {ingredients}")
-        print(f"Edited Instructions: {instructions}")
+        if not recipe_name or not ingredients or not instructions:
+            messagebox.showerror("Missing details", "Details cannot be blank.")
+            return
+
+        self.editing_recipe["name"] = recipe_name
+        self.editing_recipe["ingredients"] = ingredients
+        self.editing_recipe["instructions"] = instructions
+        self.editing_recipe["image"] = self.recipe_photo_path
+
+        self.save_my_recipes()
+        messagebox.showinfo("Updated", "Recipe updated successfully!")
+        self.my_Recipe()
 
 
 Recipe_Organizer_System()
