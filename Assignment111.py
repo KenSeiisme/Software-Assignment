@@ -18,23 +18,6 @@ class Recipe_Organizer_System:
         self.window.geometry("1500x844")
         self.window.config(bg=BG_COLOR)
 
-        menubar = Menu(self.window)
-        self.window.config(menu=menubar)
-        operation_menu = Menu(
-            menubar,
-            tearoff=0,
-            bg=BG_COLOR,
-            fg=FG_COLOR,
-            bd=0,
-            activebackground=BTN_COLOR,
-            activeforeground=FG_COLOR,
-        )
-        menubar.add_cascade(
-            label="Operations",
-            menu=operation_menu,
-        )
-        operation_menu.add_command(label="Exit", command=self.window.quit)
-
         ### Load user data from a file
         self.USER_FILE = Path(__file__).resolve().parent / "user.txt"
         self.users = self.load_users()
@@ -307,6 +290,25 @@ class Recipe_Organizer_System:
 
     ##############################################################################################################################
     ##############################################################################################################################
+
+    # Combine built-in recipes and all user-created recipes for the main page
+    def get_all_recipes(self):
+        all_list = list(recipes)
+        for r in self.my_recipes:
+            all_list.append(
+                {
+                    "name": r["name"],
+                    "category": "User Created",
+                    "tags": ["custom", r["user"]],
+                    "image": r["image"] if r["image"] else r"assets\small_Kiyo.png",
+                    "is_custom": True,
+                    "author": r["user"],
+                    "raw_ingredients": r["ingredients"],
+                    "raw_instructions": r["instructions"],
+                }
+            )
+        return all_list
+
     def Recipe_Page(self):
         for widget in self.window.winfo_children():
             widget.destroy()
@@ -358,7 +360,7 @@ class Recipe_Organizer_System:
         menubar.add_cascade(label="Operations", menu=operation_menu)
         operation_menu.add_command(label="Log out", command=self.homePage)
         operation_menu.add_command(label="Create Recipe", command=self.create_recipe)
-        operation_menu.add_command(label="Edit Recipe", command=self.edit_recipe)
+        operation_menu.add_command(label="Edit Recipe", command=self.my_Recipe)
         operation_menu.add_command(label="Profile", command=self.profile)
 
         ### Search frame
@@ -389,8 +391,11 @@ class Recipe_Organizer_System:
             bg=BG_COLOR,
         ).pack(anchor="w", pady=(5, 0))
 
-        # Get all unique categories from the recipes
-        all_categories = sorted({r["category"] for r in recipes if r.get("category")})
+        # Get all recipes (built-in + user created) and extract categories
+        all_recipes = self.get_all_recipes()
+        all_categories = sorted(
+            {r["category"] for r in all_recipes if r.get("category")}
+        )
 
         # Create a combobox for category selection
         categories_box = ttk.Combobox(
@@ -453,18 +458,21 @@ class Recipe_Organizer_System:
 
         # clear the empty space when too little recipe
         card_frame.grid_columnconfigure(5, weight=1)
-
         card_frame.bind(
             "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
 
         self.window.bind_all(
             "<MouseWheel>",
-            lambda e: canvas.yview_scroll(int(-1 * (e.delta / 120)), "units"),
+            lambda e: (
+                canvas.yview_scroll(int(-1 * (e.delta / 120)), "units")
+                if canvas.winfo_exists()
+                else None
+            ),
         )
         self.project_folder = Path(__file__).resolve().parent
         self.card_frame = card_frame
-        self.display_Recipes(recipes)
+        self.display_Recipes(all_recipes)
 
     # IMPORTANT loop to search and display
     def display_Recipes(self, recipe_list):
@@ -545,7 +553,11 @@ class Recipe_Organizer_System:
         )
         canvas.bind_all(
             "<MouseWheel>",
-            lambda e: canvas.yview_scroll(int(-1 * (e.delta / 120)), "units"),
+            lambda e: (
+                canvas.yview_scroll(int(-1 * (e.delta / 120)), "units")
+                if canvas.winfo_exists()
+                else None
+            ),
         )
 
         ### frame2
@@ -567,23 +579,32 @@ class Recipe_Organizer_System:
         image_path = self.project_folder / recipe["image"]
         self.photo = PhotoImage(file=str(image_path))
         Label(title_frame, image=self.photo).pack(pady=5)
+
+        # Append recipe author
+        category_text = "Category: " + recipe.get("category", "User Created")
+        if recipe.get("author"):
+            category_text += f"  |  Created by: {recipe['author']}"
+
         Label(
             title_frame,
-            text="Category: " + recipe["category"],
+            text=category_text,
             bg=BG_COLOR,
             fg="#d56942",
             font=("Times New Roman", 13, "bold"),
         ).pack(pady=10)
-        Button(
-            title_frame,
-            text="Customize",
-            bg=BTN_COLOR,
-            fg=FG_COLOR,
-            font=("Arial", 10, "bold"),
-            width=10,
-            height=2,
-            command=lambda: self.customize(recipe),
-        ).pack(pady=5)
+
+        # Only show Customize button for built-in structured recipes
+        if not recipe.get("is_custom"):
+            Button(
+                title_frame,
+                text="Customize",
+                bg=BTN_COLOR,
+                fg=FG_COLOR,
+                font=("Arial", 10, "bold"),
+                width=10,
+                height=2,
+                command=lambda: self.customize(recipe),
+            ).pack(pady=5)
 
         # frame3
         self.details_frame = Frame(self.page_frame, bg=BG_COLOR, highlightthickness=0)
@@ -599,19 +620,30 @@ class Recipe_Organizer_System:
             fg=FG_COLOR,
         ).pack(anchor="w")
 
-        for item in recipe["ingredients"]:
-            ingredient_text = (
-                f"{item['name']} ："
-                f"{item['amount'] if item['amount'] is not None else ''} "
-                f"{item['unit']}"
-            )
-            Label(
-                ing_frame,
-                text=ingredient_text,
-                font=("Arial", 13),
-                bg=BG_COLOR,
-                fg=FG_COLOR,
-            ).pack(side="top", anchor="w", pady=2)
+        if recipe.get("is_custom"):
+            for line in recipe["raw_ingredients"].splitlines():
+                if line.strip():
+                    Label(
+                        ing_frame,
+                        text=line,
+                        font=("Arial", 13),
+                        bg=BG_COLOR,
+                        fg=FG_COLOR,
+                    ).pack(side="top", anchor="w", pady=2)
+        else:
+            for item in recipe["ingredients"]:
+                ingredient_text = (
+                    f"{item['name']} ："
+                    f"{item['amount'] if item['amount'] is not None else ''} "
+                    f"{item['unit']}"
+                )
+                Label(
+                    ing_frame,
+                    text=ingredient_text,
+                    font=("Arial", 13),
+                    bg=BG_COLOR,
+                    fg=FG_COLOR,
+                ).pack(side="top", anchor="w", pady=2)
 
         ins_frame = Frame(self.details_frame, bg=BG_COLOR, highlightthickness=0)
         ins_frame.pack(pady=25)
@@ -624,15 +656,27 @@ class Recipe_Organizer_System:
             fg=FG_COLOR,
         ).pack()
         # for loop
-        for i, step in enumerate(recipe["steps"], start=1):
-            Label(
-                ins_frame,
-                text=f"{i}. {step}",
-                wraplength=1000,
-                font=("Arial", 13),
-                bg=BG_COLOR,
-                fg=FG_COLOR,
-            ).pack(anchor="w", pady=5)
+        if recipe.get("is_custom"):
+            for line in recipe["raw_instructions"].splitlines():
+                if line.strip():
+                    Label(
+                        ins_frame,
+                        text=line,
+                        wraplength=1000,
+                        font=("Arial", 13),
+                        bg=BG_COLOR,
+                        fg=FG_COLOR,
+                    ).pack(anchor="w", pady=5)
+        else:
+            for i, step in enumerate(recipe["steps"], start=1):
+                Label(
+                    ins_frame,
+                    text=f"{i}. {step}",
+                    wraplength=1000,
+                    font=("Arial", 13),
+                    bg=BG_COLOR,
+                    fg=FG_COLOR,
+                ).pack(anchor="w", pady=5)
 
     def customize(self, recipe):
         self.c_window = Toplevel()
@@ -746,7 +790,7 @@ class Recipe_Organizer_System:
 
         search_results = [
             recipe
-            for recipe in recipes
+            for recipe in self.get_all_recipes()
             if search_text in recipe["name"].lower()
             or search_text in recipe.get("category", "").lower()
             or any(search_text in tag.lower() for tag in recipe.get("tags", []))
@@ -982,21 +1026,22 @@ class Recipe_Organizer_System:
 
     # Save Button
     def save_recipe(self):
+        image = self.recipe_photo_path
         name = self.recipe_name_entry.get("1.0", "end").strip()
         ingredients = self.ingredients_entry.get("1.0", "end").strip()
         instructions = self.instructions_entry.get("1.0", "end").strip()
 
-        if not name or not ingredients or not instructions:
+        if not image or not name or not ingredients or not instructions:
             messagebox.showerror("Missing details", "Details cannot be blank.")
             return
 
         self.my_recipes.append(
             {
                 "user": self.current_user,
+                "image": image,
                 "name": name,
                 "ingredients": ingredients,
                 "instructions": instructions,
-                "image": self.recipe_photo_path,
             }
         )
         self.save_my_recipes()
@@ -1009,30 +1054,57 @@ class Recipe_Organizer_System:
             title="Choose a recipe photo",
             filetypes=[("PNG or GIF images", "*.png *.gif")],
         )
-        if path:
-            image = PhotoImage(file=path)
+        if not path:
+            return
 
-            # Change the file size
-            max_height = 200
-            if image.height() > max_height:
-                scale = max(1, image.height() // max_height)
-                image = image.subsample(scale, scale)
+        project_dir = Path(__file__).resolve().parent
 
-            # Validate images folder
-            project_dir = Path(__file__).resolve().parent
-            images_dir = project_dir / "images"
-            images_dir.mkdir(exist_ok=True)
+        # Get the image size
+        try:
+            ref_img = PhotoImage(file=str(project_dir / recipes[0]["image"]))
+            target_w, target_h = ref_img.width(), ref_img.height()
+        except Exception:
+            target_w, target_h = 200, 150
 
-            # Make sure the file name wont conflict & Store the file
-            new_filename = f"{int(time.time())}_{Path(path).stem}.png"
-            save_path = images_dir / new_filename
-            image.write(str(save_path), format="png")
+        src = PhotoImage(file=path)
 
-            # Store variable
-            self.recipe_photo_path = f"images/{new_filename}"
-            self.photo_name_label.config(text=new_filename)
-            self.upload_photo = image
-            self.photo_preview_label.config(image=self.upload_photo)
+        # Scale the image
+        if src.width() < target_w or src.height() < target_h:
+            zoom_x = (target_w + src.width() - 1) // src.width()
+            zoom_y = (target_h + src.height() - 1) // src.height()
+            zoom = max(1, zoom_x, zoom_y)
+            src = src.zoom(zoom, zoom)
+        else:
+            scale = min(src.width() // target_w, src.height() // target_h)
+            if scale > 1:
+                src = src.subsample(scale, scale)
+
+        # Crop the image by center
+        crop_w = min(src.width(), target_w)
+        crop_h = min(src.height(), target_h)
+        x1 = (src.width() - crop_w) // 2
+        y1 = (src.height() - crop_h) // 2
+        x2 = x1 + crop_w
+        y2 = y1 + crop_h
+
+        # Crop the image
+        cropped = PhotoImage(width=crop_w, height=crop_h)
+        cropped.tk.call(cropped, "copy", src, "-from", x1, y1, x2, y2, "-to", 0, 0)
+
+        # Save the file into images
+        images_dir = project_dir / "images"
+        images_dir.mkdir(exist_ok=True)
+
+        # Make sure the file name wont conflict & Store the file
+        new_filename = f"{int(time.time())}_{Path(path).stem}.png"
+        save_path = images_dir / new_filename
+        cropped.write(str(save_path), format="png")
+
+        # Store variable
+        self.recipe_photo_path = f"images/{new_filename}"
+        self.photo_name_label.config(text=new_filename)
+        self.upload_photo = cropped
+        self.photo_preview_label.config(image=self.upload_photo)
 
     def create_recipe(self):
         for widget in self.window.winfo_children():
@@ -1265,6 +1337,13 @@ class Recipe_Organizer_System:
 
     def delete_recipe(self, target_recipe):
         if messagebox.askyesno("Confirm Delete", f"Delete '{target_recipe['name']}'?"):
+            if target_recipe.get("image"):
+                image_path = Path(__file__).resolve().parent / target_recipe["image"]
+                try:
+                    if image_path.is_file():
+                        image_path.unlink()
+                except OSError:
+                    pass
             self.my_recipes.remove(target_recipe)
             self.save_my_recipes()
             self.my_Recipe()
