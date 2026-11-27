@@ -1,6 +1,8 @@
+import time
 from pathlib import Path
 from tkinter import *
 from tkinter import Canvas, PhotoImage, Scrollbar, filedialog, messagebox, ttk
+
 from recipe import recipes
 
 BG_COLOR = "#fef2d8"
@@ -814,8 +816,12 @@ class Recipe_Organizer_System:
             # Replace '|' to protect delimiter and escape newlines so each recipe stays on 1 line
             user = my_recipe["user"].replace("|", "/")
             name = my_recipe["name"].replace("|", "/").replace("\n", "\\n")
-            ingredients = my_recipe["ingredients"].replace("|", "/").replace("\n", "\\n")
-            instructions = my_recipe["instructions"].replace("|", "/").replace("\n", "\\n")
+            ingredients = (
+                my_recipe["ingredients"].replace("|", "/").replace("\n", "\\n")
+            )
+            instructions = (
+                my_recipe["instructions"].replace("|", "/").replace("\n", "\\n")
+            )
             image = my_recipe["image"].replace("|", "/")
             lines.append(f"{user}|{name}|{ingredients}|{instructions}|{image}")
 
@@ -867,7 +873,9 @@ class Recipe_Organizer_System:
         ).pack(padx=10, pady=10)
 
         # Filter recipes belonging to the logged-in user
-        user_recipes = [user for user in self.my_recipes if user["user"] == self.current_user]
+        user_recipes = [
+            user for user in self.my_recipes if user["user"] == self.current_user
+        ]
         if not user_recipes:
             Label(
                 self.window,
@@ -879,6 +887,7 @@ class Recipe_Organizer_System:
 
         self.recipe_photo_images = []
 
+        # Show recipe in user profile
         for my_recipe in user_recipes:
             card = LabelFrame(
                 self.window,
@@ -910,9 +919,10 @@ class Recipe_Organizer_System:
 
             if my_recipe["image"]:
                 try:
-                    photo = PhotoImage(file=my_recipe["image"])
-                    self.recipe_photo_images.append(photo)
-                    Label(card, image=photo, bg=BG_COLOR).pack(anchor="w", pady=5)
+                    image_path = Path(__file__).resolve().parent / my_recipe["image"]
+                    image = PhotoImage(file=str(image_path))
+                    self.recipe_photo_images.append(image)
+                    Label(card, image=image, bg=BG_COLOR).pack(anchor="w", pady=5)
                 except Exception:
                     Label(
                         card,
@@ -942,6 +952,7 @@ class Recipe_Organizer_System:
                 command=lambda r=my_recipe: self.delete_recipe(r),
             ).pack(side="left")
 
+    # Save Button
     def save_recipe(self):
         name = self.recipe_name_entry.get("1.0", "end").strip()
         ingredients = self.ingredients_entry.get("1.0", "end").strip()
@@ -970,18 +981,29 @@ class Recipe_Organizer_System:
             title="Choose a recipe photo",
             filetypes=[("PNG or GIF images", "*.png *.gif")],
         )
-
         if path:
-            self.recipe_photo_path = path
-            self.photo_name_label.config(text=Path(path).name)
+            image = PhotoImage(file=path)
 
-            img = PhotoImage(file=path)
-            ## Rescale if size too large
-            if img.height() > 120:
-                scale = max(1, img.height() // 120)
-                img = img.subsample(scale, scale)
+            # Change the file size
+            max_height = 200
+            if image.height() > max_height:
+                scale = max(1, image.height() // max_height)
+                image = image.subsample(scale, scale)
 
-            self.upload_photo = img
+            # Validate images folder
+            project_dir = Path(__file__).resolve().parent
+            images_dir = project_dir / "images"
+            images_dir.mkdir(exist_ok=True)
+
+            # Make sure the file name wont conflict & Store the file
+            new_filename = f"{int(time.time())}_{Path(path).stem}.png"
+            save_path = images_dir / new_filename
+            image.write(str(save_path), format="png")
+
+            # Store variable
+            self.recipe_photo_path = f"images/{new_filename}"
+            self.photo_name_label.config(text=new_filename)
+            self.upload_photo = image
             self.photo_preview_label.config(image=self.upload_photo)
 
     def create_recipe(self):
@@ -1083,12 +1105,15 @@ class Recipe_Organizer_System:
             command=lambda: self.save_recipe(),
         ).pack(side="left", padx=5)
 
-
     def edit_recipe(self, target_recipe=None):
-        user_recipes = [user for user in self.my_recipes if user["user"] == self.current_user]
+        user_recipes = [
+            user for user in self.my_recipes if user["user"] == self.current_user
+        ]
         if target_recipe is None:
             if not user_recipes:
-                messagebox.showinfo("No Recipes", "You don't have any recipes to edit yet.")
+                messagebox.showinfo(
+                    "No Recipes", "You don't have any recipes to edit yet."
+                )
                 self.my_Recipe()
                 return
             target_recipe = user_recipes[0]
