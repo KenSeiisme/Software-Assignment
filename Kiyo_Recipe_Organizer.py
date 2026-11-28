@@ -689,12 +689,12 @@ class Recipe_Organizer_System:
             fg=FG_COLOR,
             width=8,
             height=2,
-            command=lambda: self.calculate_cuztomize(
+            command=lambda: self.calculate_customize(
                 recipe, ingredient_box, amount_entry, self.result_frame
             ),
         ).pack(pady=35)
 
-    def calculate_cuztomize(self, recipe, ingredient_box, amount_entry, result_frame):
+    def calculate_customize(self, recipe, ingredient_box, amount_entry, result_frame):
         selected = ingredient_box.get()
         user_entry = amount_entry.get()
 
