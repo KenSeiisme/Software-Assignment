@@ -1,3 +1,0 @@
-qwe|wahaha|chicken|cook|images/1795781591_ayam.png
-qwe|test|testing|testing\ntesting|images/1795788504_unknown.png
-qwe|testing|testing\ntesting\ntesting|testing\ntesting\ntesting|images/1795788604_ComfyUI_00164_.png

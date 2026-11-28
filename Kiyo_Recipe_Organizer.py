@@ -181,7 +181,6 @@ class Recipe_Organizer_System:
             )
             self.homePage()
 
-
     def login(self):
         # New page
         for widget in self.window.winfo_children():
@@ -246,8 +245,6 @@ class Recipe_Organizer_System:
             self.Recipe_Page()
         else:
             messagebox.showerror("Login Failed", "Invalid username or password.")
-
-
 
     ##############################################################################################################################
     ##############################################################################################################################
@@ -783,7 +780,7 @@ class Recipe_Organizer_System:
             font=("CourierNew", 30, "bold", "italic"),
         ).pack(pady=15)
 
-        self.profile_image = PhotoImage(file="pfp.png")
+        self.profile_image = PhotoImage(file=r"assets\pfp.png")
         canvas = Canvas(
             self.window,
             width=self.profile_image.width(),
@@ -1326,6 +1323,7 @@ class Recipe_Organizer_System:
         self.save_my_recipes()
         messagebox.showinfo("Updated", "Recipe updated successfully!")
         self.my_Recipe()
+
 
 class Recipe_Organizer_System_With_Home(Recipe_Organizer_System):
     def homePage(self):
