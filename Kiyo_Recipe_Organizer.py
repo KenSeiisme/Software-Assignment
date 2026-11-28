@@ -1,5 +1,6 @@
 import time
 from pathlib import Path
+from re import search
 from tkinter import *
 from tkinter import Canvas, PhotoImage, Scrollbar, filedialog, messagebox, ttk
 
@@ -371,6 +372,7 @@ class Recipe_Organizer_System:
         categories_box.bind("<<ComboboxSelected>>", category_select)
 
         self.search_icon = PhotoImage(file=r"assets\search.png")
+        self.clear_icon = PhotoImage(file=r"assets\clear.png")
 
         Button(
             search_frame,
@@ -378,6 +380,14 @@ class Recipe_Organizer_System:
             image=self.search_icon,
             font=("Arial", 10),
             command=self.search_recipe,
+        ).pack(side="left", anchor="n")
+
+        Button(
+            search_frame,
+            text="Clear",
+            image=self.clear_icon,
+            font=("Arial", 10),
+            command=self.clear_recipe,
         ).pack(side="left", anchor="n")
 
         Button(
@@ -756,6 +766,11 @@ class Recipe_Organizer_System:
 
         self.display_Recipes(search_results)
 
+    def clear_recipe(self):
+        search_text = self.search_entry
+        search_text.delete(0, END)
+        self.search_recipe()
+
     #######################################################################################################################################
     def profile(self):
         for widget in self.window.winfo_children():
@@ -810,7 +825,118 @@ class Recipe_Organizer_System:
             height=2,
             font=("Arial", 10, "bold"),
             command=self.my_Recipe,
-        ).pack(padx=15, pady=30)
+        ).pack(padx=15, pady=(30, 0))
+
+        Button(
+            self.window,
+            text="Change Password",
+            bg=BTN_COLOR,
+            fg=FG_COLOR,
+            width=20,
+            height=2,
+            font=("Arial", 10, "bold"),
+            command=self.change_password,
+        ).pack(padx=15, pady=(30, 0))
+
+    def change_password(self):
+        for widget in self.window.winfo_children():
+            widget.destroy()
+        self.window.title("Change Password")
+
+        Label(
+            self.window,
+            text="Change Password",
+            font=("Times New Roman", 45, "bold", "italic"),
+            bg=BG_COLOR,
+            fg=FG_COLOR,
+        ).pack(pady=(60, 30))
+
+        Label(
+            self.window, text="Current Password", font=20, bg=BG_COLOR, fg=FG_COLOR
+        ).pack()
+        self.old_password_entry = Entry(self.window, font=20)
+        self.old_password_entry.pack()
+
+        Label(self.window, text="New Password", font=20, bg=BG_COLOR, fg=FG_COLOR).pack(
+            pady=(20, 0)
+        )
+        self.new_password_entry = Entry(self.window, font=20)
+        self.new_password_entry.pack()
+        Label(
+            self.window,
+            text="Password at least 5 characters",
+            fg="grey",
+            font=("Times New Roman", 10, "italic"),
+            bg=BG_COLOR,
+        ).pack()
+
+        Label(
+            self.window, text="Confirm New Password", font=20, bg=BG_COLOR, fg=FG_COLOR
+        ).pack(pady=(15, 0))
+        self.confirm_password_entry = Entry(self.window, font=20)
+        self.confirm_password_entry.pack()
+
+        button_frame = Frame(self.window, bg=BG_COLOR, highlightthickness=0)
+        button_frame.pack(pady=10)
+
+        Button(
+            button_frame,
+            text="Back",
+            width=10,
+            height=2,
+            bg=BTN_COLOR,
+            fg=FG_COLOR,
+            command=self.profile,
+        ).pack(side="left", padx=5, pady=(20, 0))
+
+        Button(
+            button_frame,
+            text="Confirm",
+            width=10,
+            height=2,
+            bg=BTN_COLOR,
+            fg=FG_COLOR,
+            command=self.confirm_change_password,
+        ).pack(side="left", padx=5, pady=(20, 0))
+
+    def confirm_change_password(self):
+        old_password = self.old_password_entry.get().strip()
+        new_password = self.new_password_entry.get().strip()
+        confirm_password = self.confirm_password_entry.get().strip()
+
+        if old_password != self.users.get(self.current_user):
+            messagebox.showerror(
+                "Change Password Failed", "Current password is incorrect."
+            )
+            return False
+        elif len(new_password) < 5:
+            messagebox.showerror(
+                "Change Password Failed", "Password must be at least 5 characters long."
+            )
+            return False
+        elif not new_password.isalnum():
+            messagebox.showerror(
+                "Change Password Failed",
+                "Password can only contain letters and numbers.",
+            )
+            return False
+        elif new_password == old_password:
+            messagebox.showerror(
+                "Change Password Failed",
+                "New password cannot be the same as the current password.",
+            )
+            return False
+        elif new_password != confirm_password:
+            messagebox.showerror(
+                "Change Password Failed",
+                "New password and confirmation do not match.",
+            )
+            return False
+        else:
+            self.users[self.current_user] = new_password
+            self.save_users(self.users)
+            messagebox.showinfo("Password Updated", "Password changed successfully!")
+            self.profile()
 
     def save_my_recipes(self):
         lines = []
