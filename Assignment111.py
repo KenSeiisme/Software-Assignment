@@ -68,48 +68,6 @@ class Recipe_Organizer_System:
 
         self.window.mainloop()
 
-    # For click back to home page
-    def homePage(self):
-
-        for widget in self.window.winfo_children():
-            widget.destroy()
-
-        self.window.title("Home")
-        title = Label(
-            self.window,
-            text="Kiyo Recipe Organizer",
-            font=("CourierNew", 25, "bold", "italic"),
-            bg=BG_COLOR,
-            fg=FG_COLOR,
-        )
-        bR = Button(
-            self.window,
-            width=10,
-            height=2,
-            bg=BTN_COLOR,
-            fg=FG_COLOR,
-            text="Register",
-            font=("Arial", 10, "bold"),
-            command=self.register,
-        )
-        bS = Button(
-            self.window,
-            width=10,
-            height=2,
-            bg=BTN_COLOR,
-            fg=FG_COLOR,
-            text="Sign in",
-            font=("Arial", 10, "bold"),
-            command=self.login,
-        )
-        title.pack(pady=(100, 20))
-
-        canvas = Canvas(self.window, bg=BG_COLOR, highlightthickness=0)
-        canvas.create_image(180, 140, anchor="center", image=self.logo_image)
-        canvas.pack()
-        bR.pack(pady=2)
-        bS.pack(pady=10)
-
     ### Save user data to a file
     def save_users(self, users):
         lines = [f"{username}:{password}" for username, password in users.items()]
@@ -126,44 +84,6 @@ class Recipe_Organizer_System:
                 username, password = line.split(":", 1)
                 users[username] = password
         return users
-
-    ### Confirm by register
-    def confirm_registration(self):
-        username = self.username_entry.get().strip()
-        password = self.password_entry.get().strip()
-
-        # Password validation
-        if len(username) == 0:
-            messagebox.showerror("Registration Failed", "Username cannot be empty.")
-            return False
-        ### To avoid file corruption that may contain (:)
-        elif not username.isalnum():
-            messagebox.showerror(
-                "Registration Failed", "Username can only contain letters and numbers."
-            )
-            return False
-        elif len(password) < 5:
-            messagebox.showerror(
-                "Registration Failed", "Password must be at least 5 characters long."
-            )
-            return False
-        ### Check if the password contain only letters and numbers
-        elif not password.isalnum():
-            messagebox.showerror(
-                "Registration Failed", "Password can only contain letters and numbers."
-            )
-            return False
-        elif username in self.users:
-            messagebox.showerror("Registration Failed", "Username already exists.")
-            return False
-        else:
-            self.users[username] = password
-            ### Save the updated user data to the file
-            self.save_users(self.users)
-            messagebox.showinfo(
-                "Registration Successful", "Account created for {}!".format(username)
-            )
-            self.homePage()
 
     def register(self):
         # New page
@@ -223,19 +143,44 @@ class Recipe_Organizer_System:
             command=self.confirm_registration,
         ).pack(side="left", padx=5, pady=(20, 0))
 
-    ### Confirm by sign in
-    def confirm_login(self):
+    ### Confirm by register
+    def confirm_registration(self):
         username = self.username_entry.get().strip()
         password = self.password_entry.get().strip()
 
-        if username in self.users and self.users[username] == password:
-            self.current_user = username
-            messagebox.showinfo(
-                "Login Successful", "Welcome back, {}!".format(username)
+        # Password validation
+        if len(username) == 0:
+            messagebox.showerror("Registration Failed", "Username cannot be empty.")
+            return False
+        ### To avoid file corruption that may contain (:)
+        elif not username.isalnum():
+            messagebox.showerror(
+                "Registration Failed", "Username can only contain letters and numbers."
             )
-            self.Recipe_Page()
+            return False
+        elif len(password) < 5:
+            messagebox.showerror(
+                "Registration Failed", "Password must be at least 5 characters long."
+            )
+            return False
+        ### Check if the password contain only letters and numbers
+        elif not password.isalnum():
+            messagebox.showerror(
+                "Registration Failed", "Password can only contain letters and numbers."
+            )
+            return False
+        elif username in self.users:
+            messagebox.showerror("Registration Failed", "Username already exists.")
+            return False
         else:
-            messagebox.showerror("Login Failed", "Invalid username or password.")
+            self.users[username] = password
+            ### Save the updated user data to the file
+            self.save_users(self.users)
+            messagebox.showinfo(
+                "Registration Successful", "Account created for {}!".format(username)
+            )
+            self.homePage()
+
 
     def login(self):
         # New page
@@ -287,6 +232,22 @@ class Recipe_Organizer_System:
             fg=FG_COLOR,
             command=self.confirm_login,
         ).pack(side="left", padx=5, pady=(20, 0))
+
+    ### Confirm by sign in
+    def confirm_login(self):
+        username = self.username_entry.get().strip()
+        password = self.password_entry.get().strip()
+
+        if username in self.users and self.users[username] == password:
+            self.current_user = username
+            messagebox.showinfo(
+                "Login Successful", "Welcome back, {}!".format(username)
+            )
+            self.Recipe_Page()
+        else:
+            messagebox.showerror("Login Failed", "Invalid username or password.")
+
+
 
     ##############################################################################################################################
     ##############################################################################################################################
@@ -1366,5 +1327,47 @@ class Recipe_Organizer_System:
         messagebox.showinfo("Updated", "Recipe updated successfully!")
         self.my_Recipe()
 
+class Recipe_Organizer_System_With_Home(Recipe_Organizer_System):
+    def homePage(self):
 
-Recipe_Organizer_System()
+        for widget in self.window.winfo_children():
+            widget.destroy()
+
+        self.window.title("Home")
+        title = Label(
+            self.window,
+            text="Kiyo Recipe Organizer",
+            font=("CourierNew", 25, "bold", "italic"),
+            bg=BG_COLOR,
+            fg=FG_COLOR,
+        )
+        bR = Button(
+            self.window,
+            width=10,
+            height=2,
+            bg=BTN_COLOR,
+            fg=FG_COLOR,
+            text="Register",
+            font=("Arial", 10, "bold"),
+            command=self.register,
+        )
+        bS = Button(
+            self.window,
+            width=10,
+            height=2,
+            bg=BTN_COLOR,
+            fg=FG_COLOR,
+            text="Sign in",
+            font=("Arial", 10, "bold"),
+            command=self.login,
+        )
+        title.pack(pady=(100, 20))
+
+        canvas = Canvas(self.window, bg=BG_COLOR, highlightthickness=0)
+        canvas.create_image(180, 140, anchor="center", image=self.logo_image)
+        canvas.pack()
+        bR.pack(pady=2)
+        bS.pack(pady=10)
+
+
+Recipe_Organizer_System_With_Home()
